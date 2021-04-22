@@ -127,3 +127,8 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+
+# data
+src/vsm_docs.mm
+src/vsm_docs.mm.index
