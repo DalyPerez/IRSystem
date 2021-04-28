@@ -1,43 +1,52 @@
 from preproc import *
 from irsystem import *
+from evaluator import *
 import re
 import sys
 import os
 import csv
 
-def load_dataset(user_path = '../dataset/corpus/MED.ALL'):
+def read_dataset(user_path): 
+    """
+        Return a documents list of a specific path
+    """
     path=user_path[:-8]  # Erase the file name and keep the path
     if os.path.exists(path): # the user has provided a file path with a set of texts
        try:
            list_texts = re.split(".I \d*\n.W\n",open(user_path).read())[1:] # Split text file with the delimiter, erase first delimiter
-           print(list_texts[0])
            return list_texts
        except IOError:
             print (user_path + " - No such file or directory")
             sys.exit(0)
     else: 
-       print('dont exist path')
        return user_path
 
-
-
+def read_relevances(rel_path):
+    lines = re.split("\n",open(rel_path).read())
+    lines = [re.split(' 0 | 1', l) for l in lines]  
+    lines.remove([''])
+    relevances= {}
+    for l in lines:
+        if not relevances.__contains__(l[0]): 
+            relevances[l[0]] = []
+        relevances[l[0]].append(l[1])
+    return relevances
 
 def main():
-    # dataset = [
-    #     "Human machine interface for lab abc computer applications",
-    #     "A survey of user opinion of computer system response time",
-    #     "The EPS user interface management system",
-    #     "System and human system engineering testing of EPS",
-    #     "Relation of user perceived response time to error measurement",
-    #     "The generation of random binary unordered trees",
-    #     "The intersection graph of paths in trees",
-    #     "Graph minors IV Widths of trees and well quasi ordering",
-    #     "Graph minors A survey",
-    # ]
+ 
+    query2docs_rel = read_relevances('../dataset/relevance/MED.REL')
+    dataset_text_list = read_dataset('../dataset/corpus/MED.ALL') # a list of the loaded documents in dataset
+    query_text_list = read_dataset('../dataset/queries/MED.QRY') # a list of the loaded queries
+    
+    query_id = '2'
+    system = IRSystem(dataset_text_list, query2docs_rel)
+    system.run_system(query_text_list[0], query_id, 2)
 
-    # query = "Human computer interaction"
-    # system = IRSystem(dataset)
-    # system.run_system(query, 2)
-    load_dataset()
+    evaluator = IREvaluator(query2docs_rel, system.ranking_querys)
+
+    ranking, true_pos, false_pos = evaluator.relevant_doc_retrieved(query_id)
+    print(true_pos, false_pos)
+    # print(ranking)
+
 
 main()
