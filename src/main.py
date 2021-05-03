@@ -38,15 +38,16 @@ def main():
     dataset_text_list = read_dataset('../dataset/corpus/MED.ALL') # a list of the loaded documents in dataset
     query_text_list = read_dataset('../dataset/queries/MED.QRY') # a list of the loaded queries
     
-    query_id = '2'
     system = IRSystem(dataset_text_list, query2docs_rel)
-    system.run_system(query_text_list[0], query_id, 2)
+    
+    for i in range(1, 31):
+        query_id = str(i)
+        system.run_system(query_text_list[0], query_id, 1)
 
-    evaluator = IREvaluator(query2docs_rel, system.ranking_querys)
-
-    ranking, true_pos, false_pos = evaluator.relevant_doc_retrieved(query_id)
-    print(true_pos, false_pos)
-    # print(ranking)
+        evaluator = IREvaluator(query2docs_rel, system.ranking_querys)
+        evaluator.evaluate_query(query_id)
+   
+    
 
 
 main()
