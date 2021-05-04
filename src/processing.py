@@ -2,6 +2,9 @@ import re
 import sys
 import os
 import csv
+from gensim.models import Word2Vec
+import numpy as np
+import gensim.downloader as api
 
 def read_dataset(user_path): 
     """
@@ -59,6 +62,9 @@ def main():
     t, f, l = conforms_true_pairs(query2docs_rel, 1033)
     print(len(t), len(f), len(l))
    
+    model = api.load('glove-wiki-gigaword-50')
+    wv = model.get_vector('house')
+    print('--->', wv)
     
  
 
