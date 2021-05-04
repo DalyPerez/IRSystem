@@ -22,6 +22,9 @@ def read_dataset(user_path):
        return user_path
 
 def dataset_dict(user_path):
+    """
+    Return a {doc_id -> doc text} dictionary
+    """
     docs = read_dataset(user_path)
     id2doc = {}
     count = 0
@@ -31,6 +34,9 @@ def dataset_dict(user_path):
     return id2doc
 
 def read_relevances(rel_path):
+    """
+    Return a { query_id -> [relevances docs id] } dictionary
+    """
     lines = re.split("\n",open(rel_path).read())
     lines = [re.split(' 0 | 1', l) for l in lines]  
     lines.remove([''])
@@ -42,7 +48,12 @@ def read_relevances(rel_path):
         relevances[q_id].append(int(l[1]))
     return relevances
 
-def conforms_true_pairs(query_relevances, total_docs):
+def conforms_pairs(query_relevances, total_docs):
+    """
+        Conforms (q_id, d_id, relevance) pairs
+        true_pairs - (q_id, d_id, 1)
+        false_pairs - (q_id, d_id, 0)
+    """
     total = len(query_relevances)
     all_pairs = []
     true_pairs = []
@@ -59,13 +70,12 @@ def conforms_true_pairs(query_relevances, total_docs):
 def main():
     d = dataset_dict('../dataset/corpus/MED.ALL') 
     query2docs_rel = read_relevances('../dataset/relevance/MED.REL')
-    t, f, l = conforms_true_pairs(query2docs_rel, 1033)
+    t, f, l = conforms_pairs(query2docs_rel, 1033)
     print(len(t), len(f), len(l))
    
     model = api.load('glove-wiki-gigaword-50')
     wv = model.get_vector('house')
     print('--->', wv)
     
- 
-
-main()
+if __name__ == "__main__":
+    main()
