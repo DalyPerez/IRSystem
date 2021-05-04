@@ -32,6 +32,7 @@ def read_relevances(rel_path):
         relevances[l[0]].append(l[1])
     return relevances
 
+
 def main():
  
     query2docs_rel = read_relevances('../dataset/relevance/MED.REL')
