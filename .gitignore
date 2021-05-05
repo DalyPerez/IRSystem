@@ -132,3 +132,4 @@ dmypy.json
 # data
 src/vsm_docs.mm
 src/vsm_docs.mm.index
+*.bin
