@@ -24,7 +24,7 @@ class lstmModel:
 
     def train(self, X, Y, VX, VY, n_epoch):
 
-        history = self.model.fit((X, Y), steps_per_epoch =len(X), validation_data = (VX, VY) , validation_steps = len(VX), epochs=n_epoch, verbose=1)
+        history = self.model.fit(X, Y, steps_per_epoch =len(X), validation_data = (VX, VY) , validation_steps = len(VX), epochs=n_epoch, verbose=1)
         self.model.save("lstmmodel.bin")
         plt.plot(history.history['acc'], "b")
         plt.plot(history.history['val_acc'], "g:")
@@ -39,6 +39,7 @@ def convert_train_data(X, Y):
 
 def TrainSimilarity(docsdict, querysdict, relpairs, w2v_dict):
     X, Y, VX, VY = data2train(docsdict, querysdict, relpairs, w2v_dict)
+    print(type(X), type(Y))
     print("creating model")
     model = lstmModel(16, 50)
     print("ready to train")

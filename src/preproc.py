@@ -27,7 +27,7 @@ def doc2vector(pdoc, w2v_dict):
     for w in pdoc:
         if w2v_dict.__contains__(w):
             v.append(w2v_dict[w])
-    return np.array(v)
+    return v
 
 def data2train(docsdict, queriesdict, relpairs, w2v_dict):
     
@@ -35,6 +35,7 @@ def data2train(docsdict, queriesdict, relpairs, w2v_dict):
     step = data_count // 10
 
     X, Y, XV, YV = [], [], [], []
+    Xd, Xq , XVd, XVq = [], [], [], []
     dataX = relpairs[step:]
     dataXV = relpairs[:step]
 
@@ -46,8 +47,9 @@ def data2train(docsdict, queriesdict, relpairs, w2v_dict):
         query = preprocess_document(queriesdict[q_id])
         vdoc = doc2vector(doc, w2v_dict)
         vquery = doc2vector(query, w2v_dict)
-        x = (vquery, vdoc)
-        X.append(x)
+        Xd.append(vdoc)
+        Xq.append(vquery)
+        # X.append(x)
         Y.append(r)
 
     for p in dataXV:
@@ -56,9 +58,15 @@ def data2train(docsdict, queriesdict, relpairs, w2v_dict):
         query = preprocess_document(queriesdict[q_id])
         vdoc = doc2vector(doc, w2v_dict)
         vquery = doc2vector(query, w2v_dict)
-        x = (vquery, vdoc)
-        XV.append(x)
+        XVd.append(vdoc)
+        XVq.append(vquery)
+        # XV.append(x)
         YV.append(r)
+
+    X = [np.array(Xd), np.array(Xq)]
+    XV = [np.array(XVd), np.array(XVq)]
+    Y = np.array(Y)
+    YV = np.array(YV)
 
     return X, Y, XV, YV
 
