@@ -7,7 +7,6 @@ import numpy as np
 import gensim.downloader as api
 from load_data import *
 
-
 def preprocess_document(doc):
     stopset = set(stopwords.words('english'))
     stemmer = PorterStemmer() 
@@ -16,8 +15,53 @@ def preprocess_document(doc):
     final_doc = [stemmer.stem(word) for word in clean] #
     return clean
 
+def doc2vector(doc, model):
+    pdoc = preprocess_document(doc)
+    v = []
+    for w in pdoc:
+        try: 
+            wv = model.get_vector(w)
+            v.append(wv)
+        except:
+            print('--> ', w, 'not in model')
+    return v
+
+
+
+def data2train(docsdict, querysdict, relpairs, model):
+    
+    data_count = len(relpairs)
+    step = data_count // 10
+
+    X, Y, XV, XY = [], [], [], []
+    dataX = relpairs[step:]
+    dataXV = relpairs[:step]
+
+    for p in dataX:
+        q_id, d_id, r = p
+        doc = docsdict[d_id]
+        query = querysdict[q_dic]
+        vdoc = doc2vector(doc, model)
+        vquery = doc2vector(query, model)
+        x = (vquery, vdoc)
+        X.append(x)
+        Y.append(r)
+
+    for p in dataXV:
+        q_id, d_id, r = p
+        doc = docsdict[d_id]
+        query = querysdict[q_dic]
+        vdoc = doc2vector(doc, model)
+        vquery = doc2vector(query, model)
+        x = (vquery, vdoc)
+        XV.append(x)
+        YV.append(r)
+
+    print(len(X), len(Y), len(XV), len(YV))
+
+
 def check_tokens_in_model(tokens):
-    model = api.load('glove-wiki-gigaword-50')
+    model = api.load('glove-wiki-gigaword-300')
     vl = []
 
     for w in tokens:
@@ -45,10 +89,14 @@ def list_docs2bows(dictionary, docs):
     return corpus
 
 def main():
-    docs = read_dataset('../dataset/corpus/MED.ALL') 
-    d, pdocs = word2id_dict(docs)
-    l = check_tokens_in_model(d.values())
-    print(len(d), len(l))
+    docs = dataset_dict('../dataset/corpus/MED.ALL')
+    querys = dataset_dict('../dataset/queries/MED.QRY')
+    relevances = read_relevances('../dataset/relevance/MED.REL')
+    pairs = conforms_pairs(relevances, len(docs))
+
+    model = api.load('glove-wiki-gigaword-300')
+
+    data2train(docs, querys, pairs, model)
 
 if __name__ == "__main__":
     main()

@@ -68,12 +68,12 @@ def conforms_pairs(query_relevances, total_docs):
 
 
 def main():
-    d = dataset_dict('../dataset/corpus/MED.ALL') 
-    query2docs_rel = read_relevances('../dataset/relevance/MED.REL')
-    t, f, l = conforms_pairs(query2docs_rel, 1033)
-    print(len(t), len(f), len(l))
+    # d = dataset_dict('../dataset/corpus/MED.ALL') 
+    # query2docs_rel = read_relevances('../dataset/relevance/MED.REL')
+    # t, f, l = conforms_pairs(query2docs_rel, 1033)
+    # print(len(t), len(f), len(l))
    
-    model = api.load('glove-wiki-gigaword-50')
+    model = api.load('glove-wiki-gigaword-300')
     wv = model.get_vector('house')
     print('--->', wv)
     
