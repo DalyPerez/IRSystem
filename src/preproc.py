@@ -22,49 +22,45 @@ def preprocess_doclist(docs):
         r.append(preprocess_document(d))
     return r
 
-def doc2vector(doc, model):
-    pdoc = preprocess_document(doc)
+def doc2vector(pdoc, w2v_dict):
     v = []
     for w in pdoc:
-        try: 
-            wv = model.get_vector(w)
-            v.append(wv)
-        except:
-            print('--> ', w, 'not in model')
-    return v
+        if w2v_dict.__contains__(w):
+            v.append(w2v_dict[w])
+    return np.array(v)
 
-
-
-def data2train(docsdict, querysdict, relpairs, model):
+def data2train(docsdict, queriesdict, relpairs, w2v_dict):
     
     data_count = len(relpairs)
     step = data_count // 10
 
-    X, Y, XV, XY = [], [], [], []
+    X, Y, XV, YV = [], [], [], []
     dataX = relpairs[step:]
     dataXV = relpairs[:step]
 
+    print(len(relpairs), len(dataX), len(dataXV))
+
     for p in dataX:
         q_id, d_id, r = p
-        doc = docsdict[d_id]
-        query = querysdict[q_dic]
-        vdoc = doc2vector(doc, model)
-        vquery = doc2vector(query, model)
+        doc = preprocess_document(docsdict[d_id])
+        query = preprocess_document(queriesdict[q_id])
+        vdoc = doc2vector(doc, w2v_dict)
+        vquery = doc2vector(query, w2v_dict)
         x = (vquery, vdoc)
         X.append(x)
         Y.append(r)
 
     for p in dataXV:
         q_id, d_id, r = p
-        doc = docsdict[d_id]
-        query = querysdict[q_dic]
-        vdoc = doc2vector(doc, model)
-        vquery = doc2vector(query, model)
+        doc = preprocess_document(docsdict[d_id])
+        query = preprocess_document(queriesdict[q_id])
+        vdoc = doc2vector(doc, w2v_dict)
+        vquery = doc2vector(query, w2v_dict)
         x = (vquery, vdoc)
         XV.append(x)
         YV.append(r)
 
-    print(len(X), len(Y), len(XV), len(YV))
+    return X, Y, XV, YV
 
 
 def check_tokens_in_model(tokens):
@@ -106,21 +102,39 @@ def save_word2vect(docs, model, file_name):
 
 def save_words_info(wembedding = 'glove-wiki-gigaword-50', file_name = 'w2vect50.bin'):
     docs, docsdict = dataset_dict('../dataset/corpus/MED.ALL')
-    querys, querysdict = dataset_dict('../dataset/queries/MED.QRY')
+    queries, querysdict = dataset_dict('../dataset/queries/MED.QRY')
 
-    all_docs = docs + querys
-    all_docs = preprocess_doclist(all_docs)
+    pdocs = preprocess_doclist(docs)
+    pqueries = preprocess_doclist(queries)
+    all_docs = pdocs + pqueries
     model = api.load(wembedding)
     save_word2vect(all_docs, model, file_name)
 
 
 
 def main():
-    save_words_info(wembedding='glove-wiki-gigaword-300', file_name='w2vect300.bin')
+    # save_words_info(wembedding='glove-wiki-gigaword-300', file_name='w2vect300.bin')
+    
+    docs, docs_dict = dataset_dict('../dataset/corpus/MED.ALL')
+    queries, queries_dict = dataset_dict('../dataset/queries/MED.QRY')
+    relevances = read_relevances('../dataset/relevance/MED.REL')
 
-    fd = open('w2vect300.bin')
-    d = js.load(fd)
-    print(len(d))
+    t, f, relpairs = conforms_pairs(relevances, len(docs_dict))
+    print(len(t), len(f), len(relpairs))
+    
+    fd = open('w2vect50.bin')
+    w2v_dict = js.load(fd)
+
+    # d1 = docs[100]
+    # print(d1)
+    # print(doc2vector(d1, w2v_dict))
+
+    X, Y, XV, YV = data2train(docs_dict, queries_dict, relpairs, w2v_dict )
+    print(XV)
+    print(YV)
+    
+
+    
 
     
 

@@ -27,7 +27,7 @@ def dataset_dict(user_path):
     """
     docs = read_dataset(user_path)
     id2doc = {}
-    count = 0
+    count = 1
     for d in docs:
         id2doc[count] = d
         count = count + 1
@@ -58,12 +58,14 @@ def conforms_pairs(query_relevances, total_docs):
     all_pairs = []
     true_pairs = []
     false_pairs = []
+
     for i in range(1, total + 1):
         for d in range(1, total_docs + 1):
             if d in query_relevances[i]:
                 true_pairs.append((i, d, 1)) # (query, doc, rel)
             else:
                 false_pairs.append((i, d, 0))
+   
     return true_pairs, false_pairs, true_pairs + false_pairs
 
 

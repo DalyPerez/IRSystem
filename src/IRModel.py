@@ -2,6 +2,7 @@ from keras.models import Model
 from keras.layers import Input, LSTM, Dense, Concatenate, Dropout
 import matplotlib.pyplot as plt
 import numpy as np
+from preproc import data2train
 
 class lstmModel:
     def __init__(self, laten_space, emmb_size):
@@ -23,12 +24,22 @@ class lstmModel:
 
     def train(self, X, Y, VX, VY, n_epoch):
 
-        history = self.model.fit_generator(GetDataAsyncContext(X, Y), steps_per_epoch=len(X), validation_data = GetDataAsyncContext(VX, VY), validation_steps = len(VX), epochs=n_epoch, verbose=1)
-        self.model.save("context_model4.bin")
+        history = self.model.fit((X, Y), steps_per_epoch =len(X), validation_data = (VX, VY) , validation_steps = len(VX), epochs=n_epoch, verbose=1)
+        self.model.save("lstmmodel.bin")
         plt.plot(history.history['acc'], "b")
         plt.plot(history.history['val_acc'], "g:")
         plt.title('metrics')
         plt.xlabel('epoch')
         plt.legend(['acc', 'val_acc'], loc='upper left')
-        plt.savefig('context4.png')
+        plt.savefig('lstmmodel.png')
         plt.show()
+
+def convert_train_data(X, Y):
+    pass
+
+def TrainSimilarity(docsdict, querysdict, relpairs, w2v_dict):
+    X, Y, VX, VY = data2train(docsdict, querysdict, relpairs, w2v_dict)
+    print("creating model")
+    model = lstmModel(16, 50)
+    print("ready to train")
+    model.train(X, Y, VX, VY, 2)

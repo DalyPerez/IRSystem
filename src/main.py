@@ -5,16 +5,26 @@ import re
 import sys
 import os
 import csv
+from IRModel import TrainSimilarity
+import time
 
 def main():
-    docs = dataset_dict('../dataset/corpus/MED.ALL')
-    querys = dataset_dict('../dataset/queries/MED.QRY')
+    docs, docs_dict = dataset_dict('../dataset/corpus/MED.ALL')
+    queries, queries_dict = dataset_dict('../dataset/queries/MED.QRY')
     relevances = read_relevances('../dataset/relevance/MED.REL')
-    pairs = conforms_pairs(relevances, len(docs))
 
-    model = api.load('glove-wiki-gigaword-300')
+    t, f, relpairs = conforms_pairs(relevances, len(docs_dict))
+    
+    fd = open('w2vect50.bin')
+    w2v_dict = js.load(fd)
 
-    data2train(docs, querys, pairs, model)
+    start = time.time()
+    
+    TrainSimilarity(docs_dict, queries_dict, relpairs, w2v_dict)
+    end = time.time()
+
+    print(end - start)
+
    
     
 
