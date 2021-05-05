@@ -31,7 +31,7 @@ def dataset_dict(user_path):
     for d in docs:
         id2doc[count] = d
         count = count + 1
-    return id2doc
+    return docs, id2doc
 
 def read_relevances(rel_path):
     """

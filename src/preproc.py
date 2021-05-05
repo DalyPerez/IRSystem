@@ -3,6 +3,7 @@ from nltk.corpus import stopwords
 from gensim.parsing.porter import PorterStemmer
 from gensim import corpora, models, similarities
 from gensim.models import Word2Vec
+import json as js
 import numpy as np
 import gensim.downloader as api
 from load_data import *
@@ -14,6 +15,12 @@ def preprocess_document(doc):
     clean = [token.lower() for token in tokens if token.lower() not in stopset and len(token) > 2] #remove stopwords
     final_doc = [stemmer.stem(word) for word in clean] #
     return clean
+
+def preprocess_doclist(docs):
+    r = []
+    for d in docs:
+        r.append(preprocess_document(d))
+    return r
 
 def doc2vector(doc, model):
     pdoc = preprocess_document(doc)
@@ -73,30 +80,50 @@ def check_tokens_in_model(tokens):
             vl.append(w)
     return vl
 
-def word2id_dict(docs):
-    pdocs = [preprocess_document(doc) for doc in docs]
+def word2id_dict(pdocs):
     dictionary = corpora.Dictionary(pdocs)
     dictionary.save('vsm.dict') # save dictionary in a vector space matrix
-    return dictionary ,pdocs
+    return dictionary
 
-def doc2bows(dictionary, doc):
-    vdoc = preprocess_document(doc)
-    return dictionary.doc2bow(vdoc) 
+def save_word2vect(docs, model, file_name):
+    w2id_dict = word2id_dict(docs)
+    wid2vect_dict = {}
+    nowords = []
 
-def list_docs2bows(dictionary, docs):
-    corpus = [dictionary.doc2bow(doc) for doc in docs]
-    corpora.MmCorpus.serialize('vsm_docs.mm', corpus) #Serialize the corpus using the Matrix Market format
-    return corpus
+
+    for w_id, w in w2id_dict.items():
+        try: 
+            v = model.get_vector(w)
+            wid2vect_dict[w] = [float(x) for x in v]
+        except:
+            print(w)
+            nowords.append(w)
+    
+    wv = open(file_name, "w")
+    js.dump(wid2vect_dict, wv)
+    wv.close()
+    return nowords
+
+def save_words_info(wembedding = 'glove-wiki-gigaword-50', file_name = 'w2vect50.bin'):
+    docs, docsdict = dataset_dict('../dataset/corpus/MED.ALL')
+    querys, querysdict = dataset_dict('../dataset/queries/MED.QRY')
+
+    all_docs = docs + querys
+    all_docs = preprocess_doclist(all_docs)
+    model = api.load(wembedding)
+    save_word2vect(all_docs, model, file_name)
+
+
 
 def main():
-    docs = dataset_dict('../dataset/corpus/MED.ALL')
-    querys = dataset_dict('../dataset/queries/MED.QRY')
-    relevances = read_relevances('../dataset/relevance/MED.REL')
-    pairs = conforms_pairs(relevances, len(docs))
+    save_words_info(wembedding='glove-wiki-gigaword-300', file_name='w2vect300.bin')
 
-    model = api.load('glove-wiki-gigaword-300')
+    fd = open('w2vect300.bin')
+    d = js.load(fd)
+    print(len(d))
 
-    data2train(docs, querys, pairs, model)
+    
+
 
 if __name__ == "__main__":
     main()
