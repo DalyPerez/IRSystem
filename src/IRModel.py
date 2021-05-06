@@ -4,13 +4,23 @@ import matplotlib.pyplot as plt
 import numpy as np
 from preproc import data2train
 
+def GetDataAsyncContext(X, Y):
+    while True:
+        for i in range(len(X)):
+            a,b = X[i]
+            print ("->", a.shape, b.shape)
+            xx = [np.array([a]), np.array([b])]
+            c = [0, 0]
+            c[Y[i]] = 1
+            yield xx, np.array([c])
+
 class lstmModel:
     def __init__(self, laten_space, emmb_size):
         hidden = laten_space // 2
-        inp_s1 = Input(shape = (None, emmb_size))
-        inp_s2 = Input(shape = (None, emmb_size))
+        inp_s1 = Input(shape = (None, emmb_size), name="document")
+        inp_s2 = Input(shape = (None, emmb_size), name="query")
         
-        encoder = LSTM(laten_space, dropout=0.2, recurrent_dropout=0.2)
+        encoder = LSTM(laten_space, dropout=0.3, recurrent_dropout=0.3)
 
         decoder_s1 = encoder(inp_s1)
         decoder_s2 = encoder(inp_s2)
@@ -23,8 +33,7 @@ class lstmModel:
         self.model.compile(loss="categorical_crossentropy", optimizer="rmsprop", metrics = ["acc"])
 
     def train(self, X, Y, VX, VY, n_epoch):
-
-        history = self.model.fit(X, Y, steps_per_epoch =len(X), validation_data = (VX, VY) , validation_steps = len(VX), epochs=n_epoch, verbose=1)
+        history = self.model.fit(GetDataAsyncContext(X, Y), steps_per_epoch =len(X), validation_data = GetDataAsyncContext(VX, VY) , validation_steps = len(VX), epochs=n_epoch, verbose=1)
         self.model.save("lstmmodel.bin")
         plt.plot(history.history['acc'], "b")
         plt.plot(history.history['val_acc'], "g:")
@@ -34,13 +43,14 @@ class lstmModel:
         plt.savefig('lstmmodel.png')
         plt.show()
 
-def convert_train_data(X, Y):
-    pass
+
 
 def TrainSimilarity(docsdict, querysdict, relpairs, w2v_dict):
     X, Y, VX, VY = data2train(docsdict, querysdict, relpairs, w2v_dict)
-    print(type(X), type(Y))
+    print(np.shape(X[0]), np.shape(X[1]), np.shape(VX), np.shape(Y))
     print("creating model")
-    model = lstmModel(16, 50)
+    model = lstmModel(64, 50)
+
+
     print("ready to train")
     model.train(X, Y, VX, VY, 2)

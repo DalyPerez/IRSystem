@@ -5,6 +5,7 @@ import csv
 from gensim.models import Word2Vec
 import numpy as np
 import gensim.downloader as api
+from preproc import *
 
 def read_dataset(user_path): 
     """
@@ -29,7 +30,7 @@ def dataset_dict(user_path):
     id2doc = {}
     count = 1
     for d in docs:
-        id2doc[count] = d
+        id2doc[count] = preprocess_document(d)
         count = count + 1
     return docs, id2doc
 
