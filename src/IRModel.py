@@ -49,8 +49,8 @@ def TrainSimilarity(docsdict, querysdict, relpairs, w2v_dict):
     X, Y, VX, VY = data2train(docsdict, querysdict, relpairs, w2v_dict)
     print(np.shape(X[0]), np.shape(X[1]), np.shape(VX), np.shape(Y))
     print("creating model")
-    # model = lstmModel(64, 50)
+    model = lstmModel(64, 50)
 
 
-    # print("ready to train")
-    # model.train(X, Y, VX, VY, 10)
+    print("ready to train")
+    model.train(X, Y, VX, VY, 10)

@@ -66,7 +66,7 @@ def data2train(docsdict, queriesdict, relpairs, w2v_dict):
         YV.append(r)
 
 
-    return X[:5], Y[:5], XV[:5], YV[:5]
+    return X, Y, XV, YV
 
 
 def check_tokens_in_model(tokens):
