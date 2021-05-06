@@ -20,10 +20,8 @@ class lstmModel:
         inp_s1 = Input(shape = (None, emmb_size), name="document")
         inp_s2 = Input(shape = (None, emmb_size), name="query")
         
-        encoder = LSTM(laten_space, dropout=0.3, recurrent_dropout=0.3)
-
-        decoder_s1 = encoder(inp_s1)
-        decoder_s2 = encoder(inp_s2)
+        decoder_s1 = LSTM(laten_space, dropout=0.3, recurrent_dropout=0.3)(inp_s1)
+        decoder_s2 = LSTM(laten_space, dropout=0.3, recurrent_dropout=0.3)(inp_s2)
         
         merge = Concatenate()([decoder_s1, decoder_s2])
         clasif = Dense(2, activation = 'softmax')(merge)
@@ -50,7 +48,5 @@ def TrainSimilarity(docsdict, querysdict, relpairs, w2v_dict):
     print(np.shape(X[0]), np.shape(X[1]), np.shape(VX), np.shape(Y))
     print("creating model")
     model = lstmModel(64, 50)
-
-
     print("ready to train")
-    model.train(X, Y, VX, VY, 10)
+    model.train(X, Y, VX, VY, 5)

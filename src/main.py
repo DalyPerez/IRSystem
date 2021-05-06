@@ -6,7 +6,7 @@ import sys
 import os
 import csv
 from IRModel import TrainSimilarity
-import time
+import time, random
 
 def main():
     docs, docs_dict = dataset_dict('../dataset/corpus/MED.ALL')
@@ -20,7 +20,7 @@ def main():
 
     start = time.time()
     
-    TrainSimilarity(docs_dict, queries_dict, relpairs, w2v_dict)
+    TrainSimilarity(docs_dict, queries_dict, relpairs , w2v_dict)
     end = time.time()
 
     print(end - start)
