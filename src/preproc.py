@@ -46,6 +46,9 @@ def data2train(docsdict, queriesdict, relpairs, w2v_dict):
         query = queriesdict[q_id]
         vdoc = doc2vector(doc, w2v_dict)
         vquery = doc2vector(query, w2v_dict)
+        if(len(vdoc) == 0 or len(vquery) == 0):
+            print("-> empty doc")
+
         x = (vdoc, vquery)
         X.append(x)
         Y.append(r)
@@ -56,12 +59,14 @@ def data2train(docsdict, queriesdict, relpairs, w2v_dict):
         query = queriesdict[q_id]
         vdoc = doc2vector(doc, w2v_dict)
         vquery = doc2vector(query, w2v_dict)
+        if(len(vdoc) == 0 or len(vquery) == 0):
+            print("-> empty doc")
         x = (vdoc, vquery)
         XV.append(x)
         YV.append(r)
 
 
-    return X, Y, XV, YV
+    return X[:5], Y[:5], XV[:5], YV[:5]
 
 
 def check_tokens_in_model(tokens):

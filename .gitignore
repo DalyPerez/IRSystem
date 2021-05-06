@@ -133,3 +133,5 @@ dmypy.json
 src/vsm_docs.mm
 src/vsm_docs.mm.index
 *.bin
+*.h5
+*.png

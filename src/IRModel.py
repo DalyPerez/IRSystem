@@ -8,7 +8,7 @@ def GetDataAsyncContext(X, Y):
     while True:
         for i in range(len(X)):
             a,b = X[i]
-            print ("->", a.shape, b.shape)
+            # print ("->", a.shape, b.shape)
             xx = [np.array([a]), np.array([b])]
             c = [0, 0]
             c[Y[i]] = 1
@@ -34,7 +34,7 @@ class lstmModel:
 
     def train(self, X, Y, VX, VY, n_epoch):
         history = self.model.fit(GetDataAsyncContext(X, Y), steps_per_epoch =len(X), validation_data = GetDataAsyncContext(VX, VY) , validation_steps = len(VX), epochs=n_epoch, verbose=1)
-        self.model.save("lstmmodel.bin")
+        # self.model.save("lstmmodel.h5")
         plt.plot(history.history['acc'], "b")
         plt.plot(history.history['val_acc'], "g:")
         plt.title('metrics')
@@ -49,8 +49,8 @@ def TrainSimilarity(docsdict, querysdict, relpairs, w2v_dict):
     X, Y, VX, VY = data2train(docsdict, querysdict, relpairs, w2v_dict)
     print(np.shape(X[0]), np.shape(X[1]), np.shape(VX), np.shape(Y))
     print("creating model")
-    model = lstmModel(64, 50)
+    # model = lstmModel(64, 50)
 
 
-    print("ready to train")
-    model.train(X, Y, VX, VY, 2)
+    # print("ready to train")
+    # model.train(X, Y, VX, VY, 10)
