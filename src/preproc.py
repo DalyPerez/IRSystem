@@ -27,12 +27,28 @@ def doc2vector(pdoc, w2v_dict):
     for w in pdoc:
         if w2v_dict.__contains__(w):
             v.append(w2v_dict[w])
+    # v = ave_sentence(v, 50)
     return np.array(v)
+
+def ave_sentence(doc_emb, dim):
+    """
+    Return the average between the words vector embedding in a sentences 
+    """
+    dv = []
+    if (len(doc_emb) > 0):
+        dv = doc_emb[0]
+        for i in range(1, len(doc_emb)):
+            for j in range(dim):
+                dv[j] += doc_emb[i][j]
+            dv[j] = float(dv[j])/float(dim)
+    return dv 
+
+
 
 def data2train(docsdict, queriesdict, relpairs, w2v_dict):
     
     data_count = len(relpairs)
-    step = data_count // 10
+    step = data_count // 5
 
     X, Y, XV, YV = [], [], [], []
     dataX = relpairs[step:]

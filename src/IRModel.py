@@ -17,27 +17,33 @@ def GetDataAsyncContext(X, Y):
 class lstmModel:
     def __init__(self, laten_space, emmb_size):
         hidden = laten_space // 2
+        # inp_s1 = Input(shape = (emmb_size, ), name="document")
+        # inp_s2 = Input(shape = (emmb_size, ), name="query")
+
         inp_s1 = Input(shape = (None, emmb_size), name="document")
         inp_s2 = Input(shape = (None, emmb_size), name="query")
         
-        decoder_s1 = LSTM(laten_space, dropout=0.3, recurrent_dropout=0.3)(inp_s1)
-        decoder_s2 = LSTM(laten_space, dropout=0.3, recurrent_dropout=0.3)(inp_s2)
+        decoder_s1 = LSTM(laten_space, dropout=0.4, recurrent_dropout=0.4)(inp_s1)
+        decoder_s2 = LSTM(laten_space, dropout=0.4, recurrent_dropout=0.4)(inp_s2)
         
-        merge = Concatenate()([decoder_s1, decoder_s2])
+        merge = Dropout(0.4)(Concatenate()([decoder_s1, decoder_s2]))
         clasif = Dense(2, activation = 'softmax')(merge)
         self.model = Model([inp_s1, inp_s2], clasif)
         self.model.summary()
 
-        self.model.compile(loss="categorical_crossentropy", optimizer="rmsprop", metrics = ["acc"])
+        self.model.compile(loss="categorical_crossentropy", optimizer="adam", metrics = ["acc"])
 
     def train(self, X, Y, VX, VY, n_epoch):
         history = self.model.fit(GetDataAsyncContext(X, Y), steps_per_epoch =len(X), validation_data = GetDataAsyncContext(VX, VY) , validation_steps = len(VX), epochs=n_epoch, verbose=1)
-        # self.model.save("lstmmodel.h5")
+        self.model.save("lstmmodel.h5")
         plt.plot(history.history['acc'], "b")
         plt.plot(history.history['val_acc'], "g:")
+        # plt.plot(history.history['mse'], "y")
+        # plt.plot(history.history['val_mse'], "m:")
+
         plt.title('metrics')
         plt.xlabel('epoch')
-        plt.legend(['acc', 'val_acc'], loc='upper left')
+        plt.legend(['acc', 'val_acc', 'mse', 'val_mse'], loc='upper left')
         plt.savefig('lstmmodel.png')
         plt.show()
 
@@ -45,8 +51,8 @@ class lstmModel:
 
 def TrainSimilarity(docsdict, querysdict, relpairs, w2v_dict):
     X, Y, VX, VY = data2train(docsdict, querysdict, relpairs, w2v_dict)
-    print(np.shape(X[0]), np.shape(X[1]), np.shape(VX), np.shape(Y))
+
     print("creating model")
     model = lstmModel(64, 50)
     print("ready to train")
-    model.train(X, Y, VX, VY, 5)
+    model.train(X, Y, VX, VY, 10)
