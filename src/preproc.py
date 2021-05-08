@@ -100,7 +100,7 @@ def check_tokens_in_model(tokens):
 
 def word2id_dict(pdocs):
     dictionary = corpora.Dictionary(pdocs)
-    dictionary.save('vsm.dict') # save dictionary in a vector space matrix
+    # dictionary.save('vsm.dict') # save dictionary in a vector space matrix
     return dictionary
 
 def save_word2vect(docs, model, file_name):
@@ -135,12 +135,9 @@ def save_words_info(wembedding = 'glove-wiki-gigaword-50', file_name = 'w2vect50
 
 
 def main():
-    # save_words_info(wembedding='glove-wiki-gigaword-300', file_name='w2vect300.bin')
     print('preprocessing info')
-    
-
-    
-
+    # save_words_info(wembedding='glove-wiki-gigaword-50', file_name='ciri50.bin')
+  
     
 
 
