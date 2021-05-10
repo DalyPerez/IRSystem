@@ -47,6 +47,9 @@ class lstmModel:
         plt.savefig('lstmmodel.png')
         plt.show()
 
+    def predict(self, ):
+        pass
+
 
 
 def TrainSimilarity(docsdict, querysdict, relpairs, w2v_dict):
@@ -55,4 +58,4 @@ def TrainSimilarity(docsdict, querysdict, relpairs, w2v_dict):
     print("creating model")
     model = lstmModel(64, 50)
     print("ready to train")
-    model.train(X, Y, VX, VY, 10)
+    model.train(X, Y, VX, VY, 15)
