@@ -35,7 +35,7 @@ class lstmModel:
 
     def train(self, X, Y, VX, VY, n_epoch):
         history = self.model.fit(GetDataAsyncContext(X, Y), steps_per_epoch =len(X), validation_data = GetDataAsyncContext(VX, VY) , validation_steps = len(VX), epochs=n_epoch, verbose=1)
-        self.model.save("lstmmodel.h5")
+        self.model.save("lstmmodel_cisi2.h5")
         plt.plot(history.history['acc'], "b")
         plt.plot(history.history['val_acc'], "g:")
         # plt.plot(history.history['mse'], "y")
@@ -55,4 +55,4 @@ def TrainSimilarity(docsdict, querysdict, relpairs, w2v_dict):
     print("creating model")
     model = lstmModel(64, 50)
     print("ready to train")
-    model.train(X, Y, VX, VY, 15)
+    model.train(X, Y, VX, VY, 10)

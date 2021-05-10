@@ -13,27 +13,27 @@ r = random.Random()
 r.seed(99)
 
 def main():
-    # docs, docs_dict = dataset_dict('../dataset/yolanda/corpus/MED.ALL')
-    # queries, queries_dict = dataset_dict('../dataset/yolanda/queries/MED.QRY')
-    # relevances = read_relevances('../dataset/yolanda/relevance/MED.REL')
+    docs, docs_dict = dataset_dict('../dataset/yolanda/corpus/MED.ALL')
+    queries, queries_dict = dataset_dict('../dataset/yolanda/queries/MED.QRY')
+    relevances = read_relevances('../dataset/yolanda/relevance/MED.REL')
 
-    docs_dict, pdocs = read_all('../dataset/jsons/CISI.ALL.json')
-    queries_dict, pqueries = read_qry('../dataset/jsons/CISI.QRY.json')
-    relevances = read_rel('../dataset/jsons/CISI.REL.json', len(pqueries))
+    # docs_dict, pdocs = read_all('../dataset/jsons/CISI.ALL.json')
+    # queries_dict, pqueries = read_qry('../dataset/jsons/CISI.QRY.json')
+    # relevances = read_rel('../dataset/jsons/CISI.REL.json', len(pqueries))
 
     true, false, relpairs = conforms_pairs(relevances, len(docs_dict))
     print(len(true), len(false), len(relpairs))
     
     r.shuffle(false)
 
-    m = len(false) // 5
+    m = len(false) // 2
     false = false[:m]
     relpairs = true + false
     r.shuffle(relpairs)
 
     print( len(true), len(false), len(relpairs))
     
-    fd = open('ciri50.bin')
+    fd = open('w2vect50.bin')
     w2v_dict = js.load(fd)
 
     start = time.time()
