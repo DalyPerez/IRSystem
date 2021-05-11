@@ -43,8 +43,6 @@ def ave_sentence(doc_emb, dim):
             dv[j] = float(dv[j])/float(dim)
     return dv 
 
-
-
 def data2train(docsdict, queriesdict, relpairs, w2v_dict):
     
     data_count = len(relpairs)
@@ -84,7 +82,6 @@ def data2train(docsdict, queriesdict, relpairs, w2v_dict):
 
     return X, Y, XV, YV
 
-
 def check_tokens_in_model(tokens):
     model = api.load('glove-wiki-gigaword-300')
     vl = []
@@ -100,8 +97,17 @@ def check_tokens_in_model(tokens):
 
 def word2id_dict(pdocs):
     dictionary = corpora.Dictionary(pdocs)
-    # dictionary.save('vsm.dict') # save dictionary in a vector space matrix
+    dictionary.save('./word2vect/vsm.dict') # save dictionary in a vector space matrix
     return dictionary
+
+def doc2bows(dictionary, doc):
+    return dictionary.doc2bow(doc) 
+
+def list_docs2bows(dictionary, docs):
+    corpus = [dictionary.doc2bow(doc) for doc in docs]
+    corpora.MmCorpus.serialize('./word2vect/vsm_docs.mm', corpus) #Serialize the corpus using the Matrix Market format
+    return corpus
+
 
 def save_word2vect(docs, model, file_name):
     w2id_dict = word2id_dict(docs)
@@ -131,8 +137,6 @@ def save_words_info(wembedding = 'glove-wiki-gigaword-50', file_name = 'w2vect50
     all_docs = pdocs + pqueries
     model = api.load(wembedding)
     save_word2vect(all_docs, model, file_name)
-
-
 
 def main():
     print('preprocessing info')

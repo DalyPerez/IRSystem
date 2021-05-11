@@ -9,14 +9,11 @@ class IREvaluator(object):
         false_positives = 0
 
         query_rel = self.relevance_docs[query_id]
-        # print('Relevant docs to query:', query_id)
-        # print([int(doc) for doc in query_rel])
         ranking = self.ranking_querys[query_id]
         ranking = [(d, s) for (d, s) in ranking if s > 0.0]
-        # print('Ranking returned')
-        # print(ranking)
+  
         for (d, s) in ranking: 
-            if str(d) in query_rel:
+            if d in query_rel:
                 true_positives +=1 
             else:
                 false_positives += 1
