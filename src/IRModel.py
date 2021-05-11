@@ -14,12 +14,19 @@ def GetDataAsyncContext(X, Y):
             c[Y[i]] = 1
             yield xx, np.array([c])
 
+def GetDataAsyncContext1(X, Y):
+    while True:
+        for i in range(len(X)):
+            a,b = X[i]
+            # print ("->", a.shape, b.shape)
+            xx = [np.array([a]), np.array([b])]
+            c = [0, 0]
+            c[Y[i]] = 1
+            yield xx, np.array([Y])
+
 class lstmModel:
     def __init__(self, laten_space, emmb_size):
-        hidden = laten_space // 2
-        # inp_s1 = Input(shape = (emmb_size, ), name="document")
-        # inp_s2 = Input(shape = (emmb_size, ), name="query")
-
+        
         inp_s1 = Input(shape = (None, emmb_size), name="document")
         inp_s2 = Input(shape = (None, emmb_size), name="query")
         
@@ -47,8 +54,6 @@ class lstmModel:
         plt.savefig('lstmmodel.png')
         plt.show()
 
-    def predict(self, ):
-        pass
 
 
 

@@ -12,13 +12,13 @@ import time, random
 from keras.models import load_model
 
 def main():
-    model = load_model("lstmmodel_cisi2.h5")
+    model = load_model("./models/cisi_50_10_15.h5")
 
     
     docs_dict, pdocs = read_all('../dataset/jsons/CISI.ALL.json')
     queries_dict, pqueries = read_qry('../dataset/jsons/CISI.QRY.json')
     relevances = read_rel('../dataset/jsons/CISI.REL.json', len(pqueries))
-
+    
     #Load the words vectors dict
     fd = open('./word2vect/cisi50.bin')
     w2v_dict = js.load(fd)
@@ -33,11 +33,11 @@ def main():
 
     #Processing relevants docs
     vdocs = {}
-    for d_id in relevances[query_id]:
+    for d_id in range(1, len(docs_dict) + 1):
         pdoc = docs_dict[query_id]
         vdoc = doc2vector(pdoc, w2v_dict)
         vdocs[d_id] = vdoc
-        pair = [np.array([vdoc]), np.array([vquery])]
+        pair = [np.array([vquery]), np.array([vdoc])]
         solve = model.predict(pair)[0]
         print("doc id ", d_id, " -> ", solve)
 
