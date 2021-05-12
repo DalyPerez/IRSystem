@@ -133,6 +133,54 @@ def save_words_info(wembedding = 'glove-wiki-gigaword-50', file_name = 'w2vect50
     save_word2vect(all_docs, model, file_name)
 
 
+##############################################################################################
+# MATCH-PYRAMID PREPROC 
+##############################################################################################
+
+def data2train_mp(docsdict, queriesdict, relpairs, w2v_dict, query_len, doc_len):
+    
+    data_count = len(relpairs)
+    step = data_count // 5
+
+    X, Y, XV, YV = [], [], [], []
+    dataX = relpairs[step:]
+    dataXV = relpairs[:step]
+
+    print(len(relpairs), len(dataX), len(dataXV))
+
+    for p in dataX:
+        q_id, d_id, r = p
+        doc = docsdict[d_id]
+        query = queriesdict[q_id]
+        vdoc = doc2vector(doc, w2v_dict)
+        vquery = doc2vector(query, w2v_dict)
+        if(len(vdoc) == 0 or len(vquery) == 0):
+            print("-> empty doc")
+
+        x = (vdoc, vquery)
+        X.append(x)
+        Y.append(r)
+
+    for p in dataXV:
+        q_id, d_id, r = p
+        doc = docsdict[d_id]
+        query = queriesdict[q_id]
+        vdoc = doc2vector_mp(doc, w2v_dict)
+        vquery = doc2vector_mp(query, w2v_dict)
+        x = (vdoc, vquery)
+        XV.append(x)
+        YV.append(r)
+    return X, Y, XV, YV
+
+
+def doc2vector_mp(pdoc, w2v_dict):
+    v = []
+    for w in pdoc:
+        if w2v_dict.__contains__(w):
+            v.append(w2v_dict[w])
+    # v = ave_sentence(v, 50)
+    return np.array(v)
+
 
 def main():
     print('preprocessing info')
