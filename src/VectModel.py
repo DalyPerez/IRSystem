@@ -9,6 +9,9 @@ class VectSystem(object):
         self.ranking_querys = {} # { query_id -> ranking list[(doc, score)] }
         self.ranking_top = ranking_top
 
+    def reset(self):
+        self.ranking_querys = {}
+
     def process_corpus(self, pdocs):
         dictionary = word2id_dict(pdocs)
         corpus_bow = list_docs2bows(dictionary, pdocs)
@@ -17,18 +20,16 @@ class VectSystem(object):
     def create_model(self, mode):
         loaded_corpus = corpora.MmCorpus('./word2vect/vsm_docs.mm') # Recover the corpus
         if mode == 1:
-            model = models.TfidfModel(loaded_corpus, wlocal=numpy.sqrt)
+            model = models.TfidfModel(loaded_corpus)
         elif mode == 2:
-            model = models.LsiModel(loaded_corpus)
+            model = models.LsiModel(loaded_corpus) # LSI model
         elif mode == 3:
             model = models.LdaModel(loaded_corpus) # LDA model
+        # elif mode == 4:
+        #     model = models.LdaMulticore(loaded_corpus) # LDA Multicore model
+        # elif mode == 5:
+        #     model = models.RpModel(loaded_corpus) # RP model
         elif mode == 4:
-            model = models.LdaMulticore(loaded_corpus) # LDA Multicore model
-        elif mode == 5:
-            model = models.LsiModel(loaded_corpus) # LSI model
-        elif mode == 6:
-            model = models.RpModel(loaded_corpus) # RP model
-        elif mode == 7:
             model = models.LogEntropyModel(loaded_corpus) # LogEntropyModel model
 
         return model
@@ -43,8 +44,8 @@ class VectSystem(object):
 
         sim = index[query_w]
         ranking = sorted(enumerate(sim), key=itemgetter(1), reverse=True)
-        # self.ranking_querys[query_id] = ranking[0: self.ranking_top]
-        self.ranking_querys[query_id] = ranking
+        self.ranking_querys[query_id] = ranking[0: self.ranking_top]
+        # self.ranking_querys[query_id] = ranking
         
         # for doc, score in ranking:
         #     print ("[ Score = " + "%.3f" % round(score, 3) + "] ", doc);

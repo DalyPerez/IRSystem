@@ -27,7 +27,7 @@ def testLSTMModel():
     
     r.shuffle(false)
 
-    m = len(false) // 10
+    m = len(false) // 2
     false = false[:m]
     relpairs = true + false
     r.shuffle(relpairs)
@@ -44,25 +44,44 @@ def testLSTMModel():
     print(end - start)
 
 def testVectModel():
-    # query2docs_rel = read_relevances('../dataset/relevance/MED.REL')
-    # dataset_text_list = read_dataset('../dataset/corpus/MED.ALL') # a list of the loaded documents in dataset
-    # query_text_list = read_dataset('../dataset/queries/MED.QRY') # a list of the loaded queries
-    
+    # pdocs, docs_dict = dataset_dict('../dataset/yolanda/corpus/MED.ALL')
+    # pqueries, queries_dict = dataset_dict('../dataset/yolanda/queries/MED.QRY')
+    # relevances = read_relevances('../dataset/yolanda/relevance/MED.REL')
+
+    # docs_dict, pdocs = read_all('../dataset/jsons/CRAN.ALL.json')
+    # queries_dict, pqueries = read_qry('../dataset/jsons/CRAN.QRY.json')
+    # relevances = read_rel('../dataset/jsons/CRAN.REL.json', len(pqueries))
+
     docs_dict, pdocs = read_all('../dataset/jsons/CISI.ALL.json')
     queries_dict, pqueries = read_qry('../dataset/jsons/CISI.QRY.json')
     relevances = read_rel('../dataset/jsons/CISI.REL.json', len(pqueries))
 
+    # l = [len(d) for d in pdocs]
+    # sd = sum(l)
+    # sq = sum(len(d) for d in pqueries)
+    # print( "-> sum", sd/len(pdocs), sq/len(pqueries), max(l))
+
     system = VectSystem(pdocs, relevances)
     
-    for query_id in range(1, len(relevances) + 1):
-        system.run_system(queries_dict[query_id], query_id, 1)
+    mode = 1
+    queries_count = 0
+    for mode in range(1, 5):
+        system.reset()
+        sp, sr = 0, 0
+        for query_id, _ in queries_dict.items():
+            queries_count += 1
+            system.run_system(queries_dict[query_id], query_id, mode)
 
-        evaluator = IREvaluator(relevances, system.ranking_querys)
-        evaluator.evaluate_query(query_id)
+            evaluator = IREvaluator(relevances, system.ranking_querys)
+            p, r = evaluator.evaluate_query(query_id)
+            sp += p
+            sr += r
+        print("-> Mode ", mode, "precision average: ", float(sp)/queries_count, "recall average: ", float(sr)/queries_count)
+
 
 def main():
-    # testLSTMModel()
-    testVectModel()
+    testLSTMModel()
+    # testVectModel()
 
    
     

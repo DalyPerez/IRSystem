@@ -6,13 +6,13 @@ import re
 import sys
 import os
 import csv
-from IRModel import TrainSimilarity
+from LSTMModel import TrainSimilarity
 import time, random
 
 from keras.models import load_model
 
 def main():
-    model = load_model("./models/cisi_50_10_15.h5")
+    model = load_model("lstmmodel.h5")
 
     
     docs_dict, pdocs = read_all('../dataset/jsons/CISI.ALL.json')
@@ -24,7 +24,7 @@ def main():
     w2v_dict = js.load(fd)
 
     #Processing query
-    query_id = 2
+    query_id = 1
     query = pqueries[query_id -1]
     print("Processed query ", query_id, ": ", query)
     vquery = doc2vector(query, w2v_dict)
@@ -33,8 +33,8 @@ def main():
 
     #Processing relevants docs
     vdocs = {}
-    for d_id in range(1, len(docs_dict) + 1):
-        pdoc = docs_dict[query_id]
+    for d_id in relevances[query_id]:
+        pdoc = docs_dict[d_id]
         vdoc = doc2vector(pdoc, w2v_dict)
         vdocs[d_id] = vdoc
         pair = [np.array([vquery]), np.array([vdoc])]

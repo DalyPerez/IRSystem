@@ -3274,7 +3274,9 @@
   "abstract": "some notes for the small disturbance linear theory of the method of local linearisation of the flow over an airfoil at mach number of unity . in this paper, the pressure distribution at the surface of a symmetrical non-lifting aerofoil with free stream mach number of unity has been investigated by means of the small-disturbance linear theory or the method of local linearization .  and by comparing with the calculated results based on an hodograph method, the accuracy of these approximate methods has been evaluated .  moreover, when these approximate methods are used for the calculation of the pressure coefficient, some notes necessary to obtain more correct results have been discussed ."
  },
  "471": {
-  "id": "471"
+  "id": "471",
+  "title": "waves in supersonic flow .",
+  "abstract": "waves in supersonic flow . in this chapter we shall mainly consider problems of steady, two- dimensional (plane) supersonic flow .  using the fact that in this case there is a steady wave system, we shall find solutions by an indirect approach .  that is, we shall first study the conditions under which simple stationary waves may exist in the flow, and then find the flow boundaries to which they correspond or which may be fitted to them .  in this procedure the limited upstream influence in a supersonic field is very helpful, for it allows flows to be analyzed or constructed step by step, which is a method that is not possible in the subsonic case ."
  },
  "472": {
   "id": "472",
@@ -6915,7 +6917,12 @@
   "abstract": "investigation of a retrocket exhausting from the nose of a blunt body into a supersonic free stream . the pressure distribution and pressure drag of a blunt body with a supersonic jet issuing upstream from its center were determined at free-stream mach numbers of 1.60, 2.00, and 2.85 . the thrust of the jet issuing from the model nose was varied to study its effects on flow around the model and to determine variation of pressure distribution and pressure drag of the model with the thrust . at all mach numbers investigated, the pressure drag decreased with increasing retrorocket thrust until a minimum value was reached . further increases in retrorocket thrust resulted in increases in the pressure drag . the resultant drag /pressure drag plus retrorocket thrust but excluding base and skin-friction drag/ of the model was reduced by retrorocket operation below the drag for a jet-off condition, except at very low retrorocket thrust coefficients . the flow about the nose of the blunt body was very unstable throughout the range of mach numbers and retrorocket thrust coefficients investigated ."
  },
  "995": {
-  "id": "995"
+  "id": "995",
+  "title": "extension of boundary layer separation criteria to a m=6 .5 utilizing flat plates with forward-facing steps .",
+  "author": "sterrett,j.r. and emery,j.c.",
+  "bibliography": "nasa tn.d618, 1960.",
+  "abstract": "extension of boundary layer separation criteria to a m=6 .5 utilizing flat plates with forward-facing steps . an experimental investigation has been made of the separation phenomena on a flat plate to which forward-facing steps were attached to force separation .  both laminar and turbulent flows were investigated over a mach number range of approximately distributions, shadowgraph and chemical film techniques, the pressure rise at separation, the laminar plateau pressure, and the turbulent peak pressure were determined . boundary-layer surveys were made on a smooth flat plate and on a flat plate with roughness to force transition .  examinations of the separated flow showed that the predominant variable in the determination of the pressure distribution was the location of transition relative to the separation point and reattachment . pure laminar, transitional, and turbulent types of separation were found in this mach number range .  the peak static-pressure-rise ratios for identical forward-facing steps at a mach number of 6.25 were approximately 1.5 and 5.0, respectively, for pure laminar and turbulent separation .  the effect of reynolds number on the peak pressure rise for turbulent separation for the lower mach number range was found to be very minor provided the step height was of the order of the boundary-layer thickness .  as the mach number is increased, the peak pressure coefficient for turbulent separation decreased from approximately 0.18 at a mach number of 4 to about 0.13 at a mach number of 6.25 .  the pressure coefficient at the separation point for laminar separation decreases from approximately 0.014 at a mach number of value at a mach number of 6.5 .  the results obtained with forward-facing steps agree with the trends predicted, based upon lower mach number studies ."
+ 
  },
  "996": {
   "id": "996",

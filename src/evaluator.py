@@ -23,6 +23,8 @@ class IREvaluator(object):
         return float(true_positives)/float(recovered)
 
     def get_recall(self, true_positives, relevant_docs ):
+        if (relevant_docs == 0):
+            return 0
         return float(true_positives)/ float(relevant_docs)
 
     def evaluate_query(self, query_id):
@@ -32,8 +34,10 @@ class IREvaluator(object):
         precision = self.get_precision(true_pos, len(rank))
         recall = self.get_recall(true_pos, q_relevants_docs)
 
-        print('*** Results Query ', query_id, ' ***')
-        print('Precision: ', precision, 'Recall: ', recall)
+        # print('*** Results Query ', query_id, ' ***')
+        # print('Precision: ', precision, 'Recall: ', recall)
+
+        return precision, recall
 
     def get_similarity(self, query_id ):
         """

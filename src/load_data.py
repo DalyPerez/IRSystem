@@ -27,12 +27,15 @@ def dataset_dict(user_path):
     Return a {doc_id -> doc text} dictionary
     """
     docs = read_dataset(user_path)
+    pdocs = []
     id2doc = {}
     count = 1
     for d in docs:
-        id2doc[count] = preprocess_document(d)
+        pdoc = preprocess_document(d)
+        pdocs.append(pdoc)
+        id2doc[count] = pdoc
         count = count + 1
-    return docs, id2doc
+    return pdocs, id2doc
 
 def read_relevances(rel_path):
     """
@@ -79,7 +82,11 @@ def read_all(json_path):
     pdocs = []
 
     for k, info in corpus.items():
-        doc = info['title'] + " " +  info['text']
+        if(info.__contains__('text')):
+            doc = info['title'] + info['text']
+        else: 
+            doc = info['abstract']
+
         pdoc = preprocess_document(doc)
         corpus_proc[int(k)] = pdoc
         pdocs.append(pdoc)
@@ -100,6 +107,7 @@ def read_qry(json_path):
 def read_rel(json_path, total_queries):
     wd = open(json_path)
     rel_dict = js.load(wd)
+    print("---------->", len(rel_dict))
     relevances = {}
 
     for q_id, info in rel_dict.items():
