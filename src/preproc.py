@@ -137,12 +137,12 @@ def save_words_info(wembedding = 'glove-wiki-gigaword-50', file_name = 'w2vect50
 # MATCH-PYRAMID PREPROC 
 ##############################################################################################
 
-def data2train_mp(docsdict, queriesdict, relpairs, w2v_dict, query_len, doc_len):
+def data2train_mp(docsdict, queriesdict, relpairs, w2v_dict, query_len, doc_len, emb_dim):
     
     data_count = len(relpairs)
     step = data_count // 5
 
-    X, Y, XV, YV = [], [], [], []
+    X_query, X_doc, Y, XV_query, XV_doc, YV = [], [], [], [], [], []
     dataX = relpairs[step:]
     dataXV = relpairs[:step]
 
@@ -152,32 +152,39 @@ def data2train_mp(docsdict, queriesdict, relpairs, w2v_dict, query_len, doc_len)
         q_id, d_id, r = p
         doc = docsdict[d_id]
         query = queriesdict[q_id]
-        vdoc = doc2vector(doc, w2v_dict)
-        vquery = doc2vector(query, w2v_dict)
-        if(len(vdoc) == 0 or len(vquery) == 0):
-            print("-> empty doc")
+        vdoc = doc2vector_mp(doc, w2v_dict, doc_len, emb_dim)
+        vquery = doc2vector_mp(query, w2v_dict, query_len, emb_dim)
 
-        x = (vdoc, vquery)
-        X.append(x)
-        Y.append(r)
+        X_query.append(vquery)
+        X_doc.append(vdoc)
+
+        c = [0, 0]
+        c[r] = 1
+        Y.append(c)
 
     for p in dataXV:
         q_id, d_id, r = p
         doc = docsdict[d_id]
         query = queriesdict[q_id]
-        vdoc = doc2vector_mp(doc, w2v_dict)
-        vquery = doc2vector_mp(query, w2v_dict)
-        x = (vdoc, vquery)
-        XV.append(x)
-        YV.append(r)
-    return X, Y, XV, YV
+        vdoc = doc2vector_mp(doc, w2v_dict, doc_len, emb_dim)
+        vquery = doc2vector_mp(query, w2v_dict, query_len, emb_dim)
+        XV_query.append(vquery)
+        XV_doc.append(vdoc)
+        c = [0, 0]
+        c[r] = 1
+        YV.append(c)
+
+    return np.array(X_query), np.array(X_doc), np.array(Y), np.array(XV_query), np.array(XV_doc), np.array(YV)
 
 
-def doc2vector_mp(pdoc, w2v_dict):
-    v = []
-    for w in pdoc:
+def doc2vector_mp(pdoc, w2v_dict, length, emb_dim):
+    pad = [0] * emb_dim
+    v = [pad] * length
+    for i,w in enumerate(pdoc):
+        if i == length:
+            break
         if w2v_dict.__contains__(w):
-            v.append(w2v_dict[w])
+            v[i] = w2v_dict[w]
     # v = ave_sentence(v, 50)
     return np.array(v)
 
