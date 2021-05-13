@@ -138,6 +138,63 @@ def save_words_info(wembedding = 'glove-wiki-gigaword-50', file_name = 'w2vect50
     model = api.load(wembedding)
     save_word2vect(all_docs, model, file_name)
 
+
+##############################################################################################
+# MATCH-PYRAMID PREPROC 
+##############################################################################################
+
+def data2train_mp(docsdict, queriesdict, relpairs, w2v_dict, query_len, doc_len, emb_dim):
+    
+    data_count = len(relpairs)
+    step = data_count // 5
+
+    X_query, X_doc, Y, XV_query, XV_doc, YV = [], [], [], [], [], []
+    dataX = relpairs[step:]
+    dataXV = relpairs[:step]
+
+    print(len(relpairs), len(dataX), len(dataXV))
+
+    for p in dataX:
+        q_id, d_id, r = p
+        doc = docsdict[d_id]
+        query = queriesdict[q_id]
+        vdoc = doc2vector_mp(doc, w2v_dict, doc_len, emb_dim)
+        vquery = doc2vector_mp(query, w2v_dict, query_len, emb_dim)
+
+        X_query.append(vquery)
+        X_doc.append(vdoc)
+
+        c = [0, 0]
+        c[r] = 1
+        Y.append(c)
+
+    for p in dataXV:
+        q_id, d_id, r = p
+        doc = docsdict[d_id]
+        query = queriesdict[q_id]
+        vdoc = doc2vector_mp(doc, w2v_dict, doc_len, emb_dim)
+        vquery = doc2vector_mp(query, w2v_dict, query_len, emb_dim)
+        XV_query.append(vquery)
+        XV_doc.append(vdoc)
+        c = [0, 0]
+        c[r] = 1
+        YV.append(c)
+
+    return np.array(X_query), np.array(X_doc), np.array(Y), np.array(XV_query), np.array(XV_doc), np.array(YV)
+
+
+def doc2vector_mp(pdoc, w2v_dict, length, emb_dim):
+    pad = [0] * emb_dim
+    v = [pad] * length
+    for i,w in enumerate(pdoc):
+        if i == length:
+            break
+        if w2v_dict.__contains__(w):
+            v[i] = w2v_dict[w]
+    # v = ave_sentence(v, 50)
+    return np.array(v)
+
+
 def main():
     print('preprocessing info')
     # save_words_info(wembedding='glove-wiki-gigaword-50', file_name='ciri50.bin')
