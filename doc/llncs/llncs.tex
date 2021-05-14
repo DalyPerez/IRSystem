@@ -289,6 +289,23 @@ Se añadió una capa Dropout para prevenir el overfitting. Sin embargo, dada la 
 	\end{center}
 \end{figure}
 
+\section{Expansión de consultas}
+El proceso de expansión de consultas es una técnica que tiene como objetivo enriquecer el contenido de la consulta con palabras adicionales, generalmente tomadas del vocabulario. Las palabras agregadas, llamados candidatos de expansión, se suponen que ayudan al proceso de matching del modelo a encontrar los documentos relevantes y resolver ambig\"uedades en consultas cortas. A pesar de no implementar esta variante de retroalimentación en el proyecto, consideramos importante reflejar el estudio realizado sobre las distintas alternativas existentes en el estado del arte, específicamente con la aplicación de word embeddings.  
+
+Si se pretende emplear word embeddings para realizar este proceso, en lugar de "matchear" la consulta y el documento en el espacio latente, los vectores de palabras son usados para encontrar buenos candidatos para expandir la consulta. La selección de los mismos generalmente está basada en un vocabulario global, donde es usada una función de similaridad para obtener los términos correctos. Varios métodos [\cite{160}, \cite{190}, \cite{191}, \cite{165}] han sido propuestos para estimar la relevancia de los términos candidatos para la consulta. La mayoría de estos comparten un procedimiento: primero se realiza una comparación de las representaciones vectoriales de cada término candidato contra cada término de la consulta y es determinada una puntuación para cada uno de los candidatos. Luego son tomados los $k$ primeros términos y agregados al final de la consulta. Algunos modelos \cite{192} pueden adicionar métodos de filtrado, como la matriz de ocurrencia entre los términos candidatos y las palabras de la consulta. 
+
+Por ejemplo en \cite{190} se proponen tres métodos que usan el embedding de cada término individual. A continuación se detallan brevemente:
+\\
+
+\textbf{Pre-retrieval kNN: } Dada una consulta $Q = [q_1, ..., q_m]$ se define el conjunto $C$ con los términos candidatos para la expansión donde $C = U_{q \in Q}(NN(q)) $ donde $NN(q)$ es el conjunto de los $k$ términos más cercanos a $q$ en el espacio de vectores de palabras empleado. Para cada término $t$ en $C$, se computa el promedio de la métrica del coseno entre $t$ y el resto de términos en $Q$. Luego, de acuerdo a esta puntuación son ordenados los términos en $C$ y los primeros $k$ son seleccionados como candidatos finales.
+\\
+
+\textbf{Post-retrieval kNN: } En esta aproximación emplean un conjunto de documentos pseudo-relevantes(PRD), o sea, aquellos documentos que estuvieron en los primeros lugares en respuesta a una consulta inicial. El objetivo es restringir el dominio de búsqueda de los términos candidatos. En lugar de buscar vecinos cercanos dentro de todo el vocabulario de la colección de documentos, se consideran solo aquellos términos que ocurren dentro de PRD. El resto del procedimiento es igual a la primera propuesta.
+\\
+
+\textbf{Pre-retrieval incremental kNN}
+Esta propuesta es una extensión de \textit{pre-retrieval kNN}, variando la forma de calcular $NN(q)$, siendo ahora de forma incremental. Se realiza un proceso iterativo sobre la lista $NN(q)$ de los candidatos aportados por el término $q$ de la consulta. Sea $NN_l(q) = [t_1, t_2, ..., t_n]$ se consideran los primeros $k$ términos, o sea, $[t_1, t_2, ..., t_{n-k}]$. Luego se toma $t_1$ y se reordena la lista anterior con respecto a la similaridad con $t_1$. Este proceso continúa durante $l$ iteraciones.
+
 
 \section{Conclusiones}
      
@@ -344,10 +361,17 @@ Se añadió una capa Dropout para prevenir el overfitting. Sin embargo, dada la 
 
 \bibitem{243} Sanjay Kamath, Brigitte Grau, and Yue Ma. Predicting and Integrating Expected Answer Types into a Simple Recurrent Neural Network Model for Answer Sentence Selection. In 20th International Conference on Computational Linguistics and Intelligent Text Processing, La Rochelle, France, April 2019. 
 
-\bibitem{81}  Matthew E Peters, Mark Neumann, Mohit Iyyer, Matt Gardner,
-Christopher Clark, Kenton Lee, and Luke Zettlemoyer. Deep contex-
-tualized word representations. arXiv preprint arXiv:1802.05365, 2018.
+\bibitem{81}  Matthew E Peters, Mark Neumann, Mohit Iyyer, Matt Gardner, Christopher Clark, Kenton Lee, and Luke Zettlemoyer. Deep contextualized word representations. arXiv preprint arXiv:1802.05365, 2018. 
 
+\bibitem{160} Fernando Diaz, Bhaskar Mitra, and Nick Craswell. Query expansion with locally-trained word embeddings. In Proceedings of the 54th Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers), volume 1, pages 367–377, 2016.
+
+\bibitem{165} Hamed Zamani and W. Bruce Croft. Estimating embedding vectors for queries. In Proceedings of the 2016 ACM International Conference on the Theory of Information Retrieval, ICTIR ’16, pages 123–132, New York, NY, USA, 2016. ACM.
+
+\bibitem{190} Dwaipayan Roy, Debjyoti Paul, Mandar Mitra, and Utpal Garain. Using word embeddings for automatic query expansion. arXiv preprint arXiv:1606.07608, 2016.
+
+\bibitem{191} Saar Kuzi, Anna Shtok, and Oren Kurland. Query expansion using word embeddings. In Proceedings of the 25th ACM international on conference on information and knowledge management, pages 1929–1932. ACM, 2016.
+
+\bibitem{192} Navid Rekabsaz, Mihai Lupu, Allan Hanbury, and Hamed Zamani. Word embedding causes topic shifting; exploit global context! In Proceedings of the 40th International ACM SIGIR Conference on Research and Development in Information Retrieval, SIGIR ’17, pages 1105–1108, New York, NY, USA, 2017. ACM.
 
 
 
