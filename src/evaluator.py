@@ -10,6 +10,7 @@ class IREvaluator(object):
 
         query_rel = self.relevance_docs[query_id]
         ranking = self.ranking_querys[query_id]
+        print(ranking)
         ranking = [(d, s) for (d, s) in ranking if s > 0.0]
   
         for (d, s) in ranking: 

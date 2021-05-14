@@ -7,18 +7,29 @@ import os
 import csv
 from operator import itemgetter
 import numpy
-# from VectModel import VectSystem
-# from LSTMModel import TrainSimilarity
+from VectModel import VectSystem
+from LSTMModel import TrainSimilarity
 import time, random
 from keras.models import load_model
 
 r = random.Random()
 r.seed(99)
 
-def select_model(m):
-    return load_model("./models/lstmmodel_med10-15.h5")
-    
-
+def select_model(m, dataset):
+    if m == 2:
+        if dataset == 1:
+            return load_model("./models/lstmmodel_med10-15.h5")
+        elif dataset == 2:
+            return load_model("./models/cisi_50_10_15.h5")
+        else
+            return load_model("./models/cran_50_10_5.h5")
+    if m == 3:
+        if dataset == 1:
+            return load_model("./models/lstmmodel_med10-15.h5")
+        elif dataset == 2:
+            return load_model("./models/cisi_50_10_15.h5")
+        else
+            return load_model("./models/cran_50_10_5.h5")
     
 def select_dataset(n):
     if n == 1:
@@ -49,8 +60,11 @@ def execute_query(q_id, vquery, docs_dict, relevances, w2v_dict, model):
         vdoc = doc2vector(pdoc, w2v_dict)
         pair = [np.array([vquery]), np.array([vdoc])]
         solve = model.predict(pair)[0]
+        # print(solve, solve[1])
         r.append((d_id, solve[1]))
-    r = sorted(enumerate(r), key=itemgetter(1), reverse=True)
+    print("r:", r)
+    r = sorted(r, key=itemgetter(1), reverse=True)
+    print("rs", r)
     ranking[q_id] = r[0: 20]
     return ranking
         
