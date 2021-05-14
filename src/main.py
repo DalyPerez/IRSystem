@@ -38,7 +38,7 @@ def testLSTMModel():
 
     print( len(true), len(false), len(relpairs))
     
-    fd = open('./word2vect/w2vect50.bin')
+    fd = open('./word2vect/cran50.bin')
     w2v_dict = js.load(fd)
 
     start = time.time()

@@ -34,8 +34,8 @@ class IREvaluator(object):
         precision = self.get_precision(true_pos, len(rank))
         recall = self.get_recall(true_pos, q_relevants_docs)
 
-        # print('*** Results Query ', query_id, ' ***')
-        # print('Precision: ', precision, 'Recall: ', recall)
+        print('*** Results Query ', query_id, ' ***')
+        print('Precision: ', precision, 'Recall: ', recall)
 
         return precision, recall
 

@@ -63,4 +63,4 @@ def TrainSimilarity(docsdict, querysdict, relpairs, w2v_dict):
     print("creating model")
     model = lstmModel(64, 50)
     print("ready to train")
-    model.train(X, Y, VX, VY, 10)
+    model.train(X, Y, VX, VY, 5)
