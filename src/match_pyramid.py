@@ -74,7 +74,7 @@ class MatchPyramidModel:
         plt.show()
 
 def predict(query_len, doc_len, emb_dim):
-    model = load_model("mp.09-0.83-0.45.h5")
+    model = load_model("mp.20-0.83-0.55.h5")
     
     # pdocs, docs_dict = dataset_dict('../dataset/yolanda/corpus/MED.ALL')
     # pqueries, queries_dict = dataset_dict('../dataset/yolanda/queries/MED.QRY')
@@ -89,7 +89,7 @@ def predict(query_len, doc_len, emb_dim):
     w2v_dict = js.load(fd)
 
     #Processing query
-    query_id = 1
+    query_id = 6
     query = pqueries[query_id -1]
     print("Processed query ", query_id, ": ", query)
     vquery = doc2vector_mp(query, w2v_dict,query_len, emb_dim)
@@ -141,13 +141,13 @@ if __name__ == "__main__":
     # end = time.time()
     # print(end - start)
 
-    model = load_model("mp.20-0.83-0.59.h5")
+    model = load_model("mp.20-0.83-0.55.h5")
     model_checkpoint = ModelCheckpoint('mp.{epoch:02d}-{val_acc:.2f}-{val_loss:.2f}.h5', monitor = 'val_loss', verbose=1,  mode = 'min')
     callbacks_list = [
                 model_checkpoint
             ]
     
-    history = model.fit([X_query, X_doc], Y, steps_per_epoch =len(X_query), validation_data=([XV_query, XV_doc], YV), validation_steps = len(XV_query), epochs=20, verbose=1, callbacks = callbacks_list)
+    history = model.fit([X_query, X_doc], Y, steps_per_epoch =len(X_query), validation_data=([XV_query, XV_doc], YV), validation_steps = len(XV_query), epochs=60, verbose=1, callbacks = callbacks_list)
     model.save("mp_cisi.h5")
     plt.plot(history.history['acc'], "b")
     plt.plot(history.history['val_acc'], "g:")
