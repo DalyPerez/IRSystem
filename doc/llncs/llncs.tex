@@ -205,27 +205,38 @@ TODO
 %
 \section{Introducción}
 %
-La Recuperación de Información (RI) es un campo de la informática que permite a un sistema de RI (SRI) seleccionar, de una colección de documentos, aquellos que probablemente correspondan a la necesidad de información de un usuario. Más específicamente, la RI es principalmente la actividad de obtener recursos de información, como documentos, pasajes y respuestas, que se supone que coinciden con una necesidad de información expresada como una consulta o una pregunta.
-Los modelos de RI se proponen e implementan para hacer frente al objetivo principal de RI, recuperar información relevante para una consulta. La mayoría de los modelos de RI se basan en el mismo supuesto, los documentos y consultas se representan como bolsa ponderada de palabras (BoW) y la relevancia se interpreta de la misma forma que la coincidencia léxica entre palabras de consulta y palabras de documento. Estos modelos estiman el ranking de relevancia basándose en la coincidencia exacta entre las palabras de las secuencias de texto de entrada. Por lo tanto, algunos documentos devueltos por el SRI no siempre satisfacen la intención del usuario con la consulta. Esta limitación se debe a las representaciones de BoW, las cuales consideran cada secuencia de texto como un conjunto de palabras independientes. El problema principal resultado de estos enfoques es el desajuste de vocabulario. Este consiste en usar un vocabulario diferente en la consulta y sus correspondientes relevantes resultados (documentos).
+La Recuperación de Información (RI) es un campo de la informática que permite a un sistema de RI (SRI) seleccionar, de una colección de documentos, aquellos que probablemente correspondan a la necesidad de información de un usuario. Más específicamente, la RI es principalmente la actividad de obtener recursos de información, como documentos o respuestas, que se supone que coinciden con una necesidad expresada como una consulta o una pregunta.
+
+Los modelos de RI se proponen e implementan para hacer frente al objetivo principal de RI, recuperar información relevante para una consulta. La mayoría de los modelos de RI se basan en el mismo supuesto, los documentos y consultas se representan como Bag-of-Words(BoW) o bolsa de palabras en español y la relevancia se interpreta de la misma forma que la coincidencia léxica entre palabras de consulta y palabras de documento. Estos modelos estiman el ranking de relevancia basándose en la coincidencia exacta entre las palabras de las secuencias de texto de entrada. Por lo tanto, algunos documentos devueltos por el SRI no siempre satisfacen la intención del usuario con la consulta. Esta limitación se debe a las representaciones de BoW, las cuales consideran cada secuencia de texto como un conjunto de palabras independientes. El problema principal resultado de estos enfoques es el desajuste de vocabulario. Este consiste en usar un vocabulario diferente en la consulta y sus correspondientes relevantes resultados (documentos).
+
 Nuestra propuesta inicial fue una aproximación de un modelo Vectorial, auxiliándonos de herramientas avanzadas para el procesamiento de texto y la representación vectorial de las sentencias mediante diferentes pesos. Este acercamiento no proporcionó buenos resultados por lo que se decidió guiar la investigación hacia otras lineas de estudio.
 En los últimos años se han dedicado grandes esfuerzos al intento de mejorar el rendimiento de los sistemas de RI y la investigación ha explorado muchas direcciones diferentes tratando de utilizar los provechosos resultados obtenidos en otras áreas. En este trabajo investigaremos la posibilidad de utilizar Redes Neuronales en RI. 
-Los modelos neuronales aprenden representaciones del lenguaje a partir del texto procesado lo cual puede salvar la brecha entre el vocabulario de consultas y documentos. Una consulta, normalmente contiene poca cantidad de términos, mientras que la longitud de los documentos, dependiendo del escenario, puede variar desde unos pocos términos hasta cientos de oraciones o más. Los modelos para RI utilizan representaciones vectoriales de texto y, por lo general, contienen una gran cantidad de parámetros que necesitan ser ajustados. El aprendizaje de representaciones adecuadas de texto también exige conjuntos de datos a gran escala para para el entrenamiento. Por lo tanto, a diferencia de los modelos de RI clásicos, estos enfoques neuronales tienden a consumir datos, con un rendimiento que mejora con más datos de entrenamientos.
-Impulsado por los avances que ha tenido el aprendizaje profundo en investigaciones de visión por computadora, las redes neuronales han resurgido como un paradigma popular de machine learning en muchas otras direcciones de investigación, incluida la recuperación de información. Nuestro modelo pretende extraer las características semánticas de las sentencias a través de redes neuronales recurrentes, específicamente 2 redes LSTM, una para codificar la consulta y otra para el documento. Las componentes principales son los embeddings a nivel de palabras utilizados, los vectores de sentencia y el comparador inmerso en el modelo. 
+Los modelos neuronales aprenden representaciones del lenguaje a partir del texto procesado lo cual puede salvar la brecha entre el vocabulario de consultas y documentos. Una consulta, normalmente contiene poca cantidad de términos, mientras que la longitud de los documentos, dependiendo del escenario, puede variar desde unos pocos términos hasta cientos de oraciones o más. Los modelos para RI utilizan representaciones vectoriales de texto y, por lo general, contienen una gran cantidad de parámetros que necesitan ser ajustados. El aprendizaje de representaciones adecuadas de texto también exige conjuntos de datos a gran escala para el entrenamiento. Por lo tanto, a diferencia de los modelos de RI clásicos, estos enfoques neuronales tienden a consumir datos, con un rendimiento que mejora con más datos de entrenamientos.
+
+Impulsado por los avances que ha tenido el aprendizaje profundo en investigaciones de visión por computadora, las redes neuronales han resurgido como un paradigma popular de aprendizaje de máquina en muchas otras direcciones de investigación, incluida la recuperación de información. Uno de nuestros modelos pretende extraer las características semánticas de las sentencias a través de redes neuronales recurrentes, específicamente 2 redes LSTM, una para codificar la consulta y otra para el documento. Las componentes principales son los embeddings a nivel de palabras utilizados, los vectores de sentencia y el comparador inmerso en el modelo. Otro de los modelos hará uso principalmente de una matriz de \textit{matching} entre la consulta y el documento, la cual será procesada por una Red Convolucional (CNN) con el objetivo de extraer patrones que resulten útiles para determinar similaridad.   
 %
 \section{Trabajos Relacionados}
 %
 Las redes neuronales son conocidas por su capacidad de construir, en un espacio latente, representaciones que son capaces de capturar la semántica de diferentes tipos de información (por ejemplo, imágenes, sonido, texto). En los últimos años, las redes neuronales profundas han llegado a un progreso notable en varias áreas de investigación, como el reconocimiento del habla, visión por computadora y minería de texto, incluidas varias tareas de IR \cite{11}. En el procesamiento de texto, los modelos neuronales se utilizan para construir representaciones ditribuidas(embeddings) de palabras y secuencias, así como para realizar el proceso de matching.
-Machine learning (ML) ha sido empleado en tareas de RI desde la década de 1980 \cite{206}. En este sentido, dichos algoritmos son usados en dos objetivos principales: (1) para aprendizaje de representaciones textuales \cite{12}\cite{55}, donde la representación de la entrada es optimizada durante el entrenamiento, y (2) para matching \cite{185,207}, donde es aprendida una función de ranking. La mayoría de los modelos de RI están dirigidos al aprendizaje de funciones de ranking \cite{205,208,209,210,211} y son referenciados como modelos Learning to Rank(LTR). Todos los métodos LTR pueden ser agrupados \cite{207} en 3 enfoques: pointwise, pairwise y listwise, los cuales difieren en cuanto al objetivo a aprender. 
-Los diferentes modelos neuronales para aplicaciones de text matching se dividen en dos grupos principales \cite{178}, específicamente los modelos centrados en la representación de la información y los modelos enfocados en la interacción. Los de la primera clase intentan aprender patrones latentes que mejor representan las secuencias de entrada, a continuación se mencionan algunos de ellos.
-Huang et al \cite{16} propone un Deep Structured Semantic Model (DSSM) para búsqueda web ad-hoc. La entrada consiste en dos ramas simétricas profundas, una para la consulta y otra para el documento. El espacio de embedding contiene un conjunto de representaciones de vectores aprendidos a nivel de letras. La representación intermedia constituye la concatenación de diferentes vectores de n-grams de las secuencias de entrada. La capa de matching la sustituye la función de similitud del coseno. El trabajo de Shen et al \cite{237} extiende el modelo DSSM introduciendo una red neuronal convolucional(CNN) en la arquitectura.
-En otros modelos, la función de representación podría ser una CNN de múltiples capas de convolución y agrupación, como en el modelo LTR convolucional de Severyn y Moschitti \cite{238} y el modelo ARC-I de HU et al. \cite{17}. Por ejemplo el modelo LTR convolucional \cite{238} primero concatena cada vector de palabras y calcula la representación correspondiente de cada secuencia mediante una capa CNN. En la parte de matching es utilizada una matriz de similaridad M.
-El modelo MV-LSTM de Wan et al. \cite{3} utiliza capas BiLSTM para aprender representaciones basadas en determinadas posiciones para cada secuencia de entrada. Algunos modelos recurrentes \cite{243,241} combinan señales de representación calculadas por los estados ocultos de las redes recurrentes, con señales externas para fortalecer las representaciones finales.
-Con respecto a los modelos centrados en la interacción, intentan aprender diferentes características de similaridad dadas las representaciones distribuidas iniciales de las secuencias de entrada. La función de matching puede ser definida mediante una matriz M la cual representa matchings a nivel de palabras, su formulación varía en los diferentes modelos del estado del arte. 
 
-\subsection{Representación semántica}
+Machine learning (ML) ha sido empleado en tareas de RI desde la década de 1980 \cite{206}. En este sentido, dichos algoritmos son usados en dos objetivos principales: (1) para aprendizaje de representaciones textuales \cite{12}\cite{55}, donde la representación de la entrada es optimizada durante el entrenamiento, y (2) para matching \cite{185,207}, donde es aprendida una función de ranking. La mayoría de los modelos de RI están dirigidos al aprendizaje de funciones de ranking \cite{205,208,209,210,211} y son referenciados como modelos Learning to Rank(LTR). Todos los métodos LTR pueden ser agrupados \cite{207} en 3 enfoques: \textit{pointwise}, \textit{pairwise} y \textit{listwise}, los cuales difieren en cuanto al objetivo a aprender. 
+
+Los diferentes modelos neuronales para aplicaciones de \textit{text matching} se dividen en dos grupos principales \cite{178}, específicamente los modelos centrados en la representación de la información y los modelos enfocados en la interacción. Los de la primera clase intentan aprender patrones latentes que mejor representan las secuencias de entrada, a continuación se mencionan algunos de ellos.
+
+Huang et al \cite{16} propone un Deep Structured Semantic Model (DSSM) para búsqueda web ad-hoc. La entrada consiste en dos ramas simétricas profundas, una para la consulta y otra para el documento. El espacio de embedding contiene un conjunto de representaciones de vectores aprendidos a nivel de letras. La representación intermedia constituye la concatenación de diferentes vectores de \textit{n}-gramas de las secuencias de entrada. La capa de \textit{matching} la sustituye la función de similitud del coseno. El trabajo de Shen et al \cite{237} extiende el modelo DSSM introduciendo una red neuronal convolucional (CNN) en la arquitectura.
+
+En otros modelos, la función de representación podría ser una CNN de múltiples capas de convolución y agrupación, como en el modelo LTR convolucional de Severyn y Moschitti \cite{238} y el modelo ARC-I de HU et al. \cite{17}. Por ejemplo el modelo LTR convolucional \cite{238} primero concatena cada vector de palabras y calcula la representación correspondiente de cada secuencia mediante una capa CNN. En la parte de \textit{matching} es utilizada una matriz de similaridad $M$.
+
+El modelo MV-LSTM de Wan et al. \cite{3} utiliza capas BiLSTM para aprender representaciones basadas en determinadas posiciones para cada secuencia de entrada. Algunos modelos recurrentes \cite{243,241} combinan señales de representación calculadas por los estados ocultos de las redes recurrentes, con señales externas para fortalecer las representaciones finales.
+
+Con respecto a los modelos centrados en la interacción, intentan aprender diferentes características de similaridad dadas las representaciones distribuidas iniciales de las secuencias de entrada. La función de \textit{matching} puede ser definida mediante una matriz $M$ la cual representa \textit{matchings} a nivel de palabras, su formulación varía en los diferentes modelos del estado del arte. 
+
+\section{Representación semántica}
 
 Las representaciones distribuidas son las que tienen en cuenta el contexto de ocurrencia de la palabra. Se conocen popularmente como word embeddings. Estas condensan la información de la palabra y su contexto en un número menor de dimensiones y con información de su significado.
-La representación semántica distribuida conocida como Word2Vec, constituye un medio para encapsular las apariciones de palabras en texto como elementos en un espacio vectorial \cite{2}. Este método es bastante exitoso, pero por su naturaleza, crea embeddings para palabras sueltas (y frases cortas comunes) solamente. La universidad de Stanford desarrolló otro método para computar la semántica distribuida de las palabras, y este método se conoce como GloVe. GloVe es similar a Word2Vec, calcula la frecuencia de ocurrencia de cada palabra y crea un vector de una dimensión específica para representar una palabra, pero los métodos que utilizan son más basados en álgebra lineal \cite{0}. En esta investigación se usaron los embeddings glove-wiki-gigaword-50 y glove-wiki-gigaword-300 con vectores de dimensión 50 y 300 respectivamente.
+
+La representación semántica distribuida conocida como Word2Vec, constituye un medio para encapsular las apariciones de palabras en texto como elementos en un espacio vectorial \cite{2}. Este método es bastante exitoso, pero por su naturaleza, crea embeddings para palabras sueltas (y frases cortas comunes) solamente. La universidad de Stanford desarrolló otro método para computar la semántica distribuida de las palabras, y este método se conoce como GloVe. GloVe es similar a Word2Vec, calcula la frecuencia de ocurrencia de cada palabra y crea un vector de una dimensión específica para representar una palabra, pero los métodos que utilizan son más basados en álgebra lineal \cite{0}. En esta investigación se usaron los embeddings \texttt{glove-wiki-gigaword-50} y \texttt{glove-wiki-gigaword-300} con vectores de dimensión 50 y 300 respectivamente.
+
 Se han desarrollado varios métodos para obtener el embedding de una oración representada por una secuencia de palabras, cada una con su propio vector. Algunos de estos métodos implican el uso de redes neuronales como por ejemplo LSTM y sus variaciones. (Arora et al. 2016) \cite{1} propuso un baseline para embeddings de oraciones llamado método SIF el cual implica tomar el promedio de todos los vectores de palabras en una oración y eliminar la primera componente. 
 
 \section{Sistemas de Recuperación de Información Propuestos}
@@ -233,15 +244,16 @@ Se han desarrollado varios métodos para obtener el embedding de una oración re
 
 \subsection{Procesamiento de los Datos}
 
-En ambas propuestas ofrecidas se procesan los datos de la misma forma. Los corpus utilizados para los experimientos se pueden descargar aquí \href{http://ir.dcs.gla.ac.uk/resources/test_collections/} {http://ir.dcs. gla.ac.uk/resources/test\_collections/}, sus nombres son CISI, Cranfield y Medline. Estos mantienen formatos similares lo cual facilitó su parseado.
-A cada sentencia(documentos y consultas) extraida se le aplicó un preprocesamiento para obtener una representación vectorial que capturara mayores características semánticas. Primeramente se separa la oración en tokens utilizando el módulo wordpunct\_tokenize de nltk( Natural Language ToolKIt), eliminando signos de puntuación y espacios en blanco. Luego son descartados los stopwords que se encuentran en nltk.corpus.stopwords y removidos los sufijos detectados. En esta última fase de stemming se empleó PorterStemmer, perteneciente a la librería gensim, específicamente gensim.parsing.porter. Finalmente cada sentencia constituye una lista de términos que serán comparadas utilizando algoritmos de similaridad.
+En todas las propuestas se procesan los datos de la misma forma. Los corpus utilizados para los experimientos se pueden descargar aquí \href{http://ir.dcs.gla.ac.uk/resources/test_collections/} {http://ir.dcs. gla.ac.uk/resources/test\_collections/}, sus nombres son CISI, Cranfield y Medline. Estos mantienen formatos similares, lo cual facilitó el \textit{parsing} de los mismos.
+
+A cada sentencia(documentos y consultas) extraída se le aplicó un preprocesamiento para obtener una representación vectorial que capturara mayores características semánticas. Primeramente, se separa la oración en tokens utilizando el módulo \texttt{wordpunct\_tokenize} de nltk( Natural Language ToolKIt), eliminando signos de puntuación y espacios en blanco. Luego son descartados los stopwords que se encuentran en \texttt{nltk.corpus.stopwords} y removidos los sufijos detectados. En esta última fase de stemming se empleó PorterStemmer, perteneciente a la librería \texttt{gensim}, específicamente \texttt{gensim.parsing.porter}. Finalmente, cada sentencia constituye una lista de términos que serán comparadas utilizando algoritmos de similaridad.
 
 \subsection{Modelo Vectorial}
 
-Esta propuesta se apoya en gran medida de herramientas ya implementadas para representar vectorialmente el conjunto de documentos ya procesado. Una vez tenido preprocesada cada sentencia se construye un diccionario donde las llaves constituyen el conjunto de palabras presentes y los valores serían el id correspondiente a cada una. A partir de este diccionario, se convierte a cada documento en una lista de tuplas de la forma (token_id, token_count), o sea, en la clásica representación Bag-of-Words(BoW) o bolsa de palabras en español. BoW es un enfoque común utilizado para representar texto en tareas de recuperación de información en particular. Posee una estructura simple sin capturar conocimientos lingúísticos ni de contexto.
+Esta propuesta se apoya en gran medida de herramientas ya implementadas para representar vectorialmente el conjunto de documentos ya procesado. Una vez tenido preprocesada cada sentencia se construye un diccionario donde las llaves constituyen el conjunto de palabras presentes y los valores serían el identificador (id) correspondiente a cada una. A partir de este diccionario, se convierte a cada documento en una lista de tuplas de la forma (token\_id, token\_count), o sea, en la clásica representación BoW, que es un enfoque común utilizado para representar texto en tareas de recuperación de información en particular. Posee una estructura simple sin capturar conocimientos lingúísticos ni de contexto.
 
 De la unión de las listas anteriores se obtiene lo que sería el corpus representativo del dataset en cuestión. 
-El mismo encapsula los valores de frecuencia de las palabras y conforma la entrada a los modelos mencionados. En este trabajo se emplearon 4 modelos que se encuentran en la librería gensim.models. A continuación se muestra una breve descripción de los mismos:
+El mismo encapsula los valores de frecuencia de las palabras y conforma la entrada a los modelos mencionados. En este trabajo se emplearon 4 modelos que se encuentran en la librería \texttt{gensim.models}. A continuación se muestra una breve descripción de los mismos:
 \begin{itemize}
 	\item \textbf{TdidfModel}: transforma una matriz de ocurrencia de términos en una matriz con el esquema clásico TF(term frequency)-IDT(inverse document frequency)
 	\item \textbf{LsiModels}(Latent Semantic Indexing): Implementa SVD(Singular Value Decomposition). La descomposición de SVD se puede actualizar con nuevas observaciones en cualquier momento, para un entrenamiento en línea, incremental y eficiente en la memoria. Permite identificar patrones y relaciones entre términos y temas. 
@@ -251,48 +263,114 @@ El mismo encapsula los valores de frecuencia de las palabras y conforma la entra
 \end{itemize}
 
 	En esencia cada modelo representa de forma diferente la información semántica contenida en el corpus y es muy útil para obtener dicha representación en las nuevas consultas generadas. Transforman un vector de un espacio hacia otro.
-Finalmente es necesario evaluar la similaridad entre el conjunto de documentos y una consulta. Para ello se usó la matriz de similaridad de gensim, MatrixSimilarity. Esta matriz recibe el corpus y devuelve un ranking entre todos los documentos respecto a la consulta, utilizando la métrica del coseno.
-Un pipeline completo quedaría conformado de la siguiente forma
+	
+Finalmente es necesario evaluar la similaridad entre el conjunto de documentos y una consulta. Para ello se usó la matriz de similaridad de \texttt{gensim}, MatrixSimilarity. Esta matriz recibe el corpus y devuelve un ranking entre todos los documentos respecto a la consulta, utilizando la métrica del coseno. En la Figura \ref{vect} se muestra cómo quedaría conformado un pipeline completo de estos modelos.
 
 \begin{figure}
 	\begin{center}
 		\includegraphics[width=\linewidth]{ ./images/vect.jpg}
-		\caption{Esquema}
+		\caption{Esquema de la versión de modelo vectorial.}
 		\label{vect}
 	\end{center}
 \end{figure}
 
 
-TABLAS
+\subsubsection{Evaluación.} En las Tablas \ref{medline}, \ref{cisi}, \ref{cran} se muestran los valores obtenidos de promediar la precisión y el recobrado obtenidos al aplicar cada uno de los modelos a las colecciones de prueba seleccionadas.
+
+\begin{table}[h]
+	\caption{Dataset: Medline (documentos: 1033 consultas: 30)}
+	\label{medline} 
+	\begin{tabular}{|l|c|c|c|c|}
+		\hline
+		\textbf{Métrica} & \textbf{TdidfModel} & \textbf{LsiModels} & \textbf{LdaModel} &  \textbf{LogEntropyModel} \\
+		\hline
+		Precisión & 0.25590 & 0.02000 & 0.02014 & 0.25924 \\
+		\hline
+		Recobrado & 0.51909 & 0.03823 & 0.03919 & 0.52436 \\
+		\hline
+	\end{tabular} 
+\end{table}
+
+\begin{table}[h]
+	\caption{Dataset: CISI (documentos: 1460 consultas: 112)}
+	\label{cisi}
+	\begin{tabular}{|l|c|c|c|c|}
+		\hline
+		\textbf{Métrica} & \textbf{TdidfModel} & \textbf{LsiModels} & \textbf{LdaModel} &  \textbf{LogEntropyModel} \\
+		\hline		
+		Precisión & 0.03607 & 0.00955 & 0.00604 & 0.00910 \\
+		\hline
+		Recobrado & 0.05030 & 0.01641 & 0.00665 & 0.01213 \\
+		\hline
+	\end{tabular} 
+\end{table}
+
+\begin{table}[h]
+	\caption{Dataset: Cranfield (documentos: 1400 consultas: 225)}
+	\label{cran}
+	\begin{tabular}{|l|c|c|c|c|}
+		\hline
+		\textbf{Métrica} & \textbf{TdidfModel} & \textbf{LsiModels} & \textbf{LdaModel} &  \textbf{LogEntropyModel} \\
+		\hline
+		Precisión & 0.04284 & 0.00248 & 0.00201 & 0.01062 \\
+		\hline
+		Recobrado & 0.27418 & 0.01535 & 0.01319 & 0.06776 \\
+		\hline
+	\end{tabular} 
+\end{table}
 
 \subsection{Modelo Neuronal con Redes LSTM}
 
-Nuestra segunda propuesta estuvo motivada por el éxito de las redes LSTM(Long-Short Term Model) en tareas de procesamiento de lenguaje natural como traducción automática, clasificación de textos, chatbots, debido a su capacidad de aprender dependencias entre términos a largo plazo. El modelo LSTM es construido a partir del modelo RNN básico, evitando una de las limitaciones de estas últimas al trabajar con largas secuencias, conocido como vanishing gradient problem. 
-LSTM desarrolla una celda de memoria y usa filtros para decidir cuánta información debe olvidarse o debe fluir a través de los pasos de tiempo. De esta manera, se puede guardar información útil y se puede descartar información innecesaria. El modelo LSTM y sus variantes como Gated Recurrent Unit (GRU) de Cho et al. (2014) han demostrado que si se entrena de manera efectiva puede codificar el significado de las oraciones en representaciones vectoriales de longitud fija. 
+Nuestra segunda propuesta estuvo motivada por el éxito de las redes Long-Short Term Memory (LSTM) en tareas de procesamiento de lenguaje natural como traducción automática, clasificación de textos, chatbots, debido a su capacidad de aprender dependencias entre términos a largo plazo. El modelo LSTM es construido a partir del modelo RNN básico, evitando una de las limitaciones de estas últimas al trabajar con largas secuencias, conocido como \textit{vanishing gradient problem}. 
+LSTM desarrolla una celda de memoria y usa filtros para decidir cuánta información debe olvidarse o debe fluir a través de los pasos de tiempo. De esta manera, se puede guardar información útil y se puede descartar información innecesaria. El modelo LSTM y sus variantes como Gated Recurrent Unit (GRU) han demostrado que si se entrena de manera efectiva puede codificar el significado de las oraciones en representaciones vectoriales de longitud fija. 
 
 \subsubsection{Representación de las Sentencias.}
 
-El modelo recibe como entrada dos sentencias que constituyen listas de términos ya preprocesadas pero es necesario obtener una representación vectorial de las mismas. Para ello se emplearon los embeddings de palabras. Estos mecanismos permiten asignar un vector de determinado espacio a cada palabra, de forma tal que a dos palabras semánticamente equivalentes les correspondan vectores lo más cercanos posible en dicho espacio. Para cada dataset se salvó un diccionario con los vectores asociados a cada palabra, evitando así recalcular estos valores de una corrida a otra. En este trabajo se empleó en la mayoría de los experimentos el embedding preentrenado glove-wiki-gigaword-50. 
-Luego cada sentencia quedaría conformada por la unión de los vectores correspondientes a cada uno de sus términos. Por ejemplo la sentencia s1 = [w1, w2, w3, ..., wt] se representa vectorialmente como un vector donde cada componente tiene dimensión 50. s1 = [WE(w1), WE(w2), WE(w3), ....]
-El conjunto de datos para el entrenamiento se conformó formando todas las posibles parejas de documentos y consultas existentes en el dataset. Si el documento di es relevante a la consulta qj se crea el par (di, qj) cuya etiqueta sería [0, 1], en caso contrario la etiqueta sería [1, 0]. Se considera que uno de estos pares es negativo si su etiqueta es de la forma [1, 0], o sea, no representa una relación de relevancia. El análisis es análogo para los pares positivos. La salida del modelo simboliza el grado de similitud entre las dos sentencias.
+El modelo recibe como entrada dos sentencias que constituyen listas de términos ya preprocesadas pero es necesario obtener una representación vectorial de las mismas. Para ello se emplearon los embeddings de palabras. Estos mecanismos permiten asignar un vector de determinado espacio a cada palabra, de forma tal que a dos palabras semánticamente equivalentes les correspondan vectores lo más cercanos posible en dicho espacio. Para cada dataset se salvó un diccionario con los vectores asociados a cada palabra, evitando así recalcular estos valores de una corrida a otra. En este trabajo se empleó en la mayoría de los experimentos el embedding preentrenado g\texttt{love-wiki-gigaword-50}. 
+
+Luego cada sentencia quedaría conformada por la unión de los vectores correspondientes a cada uno de sus términos. Por ejemplo la sentencia $s_1 = [w_1, w_2, w_3, ..., w_t]$ se representa vectorialmente como un vector donde cada componente tiene dimensión 50 $s1 = [WE(w_1), WE(w_2), WE(w_3), ....]$.
+
+El conjunto de datos para el entrenamiento se conformó con todas las posibles parejas de documentos y consultas existentes en el dataset. Si el documento $d_i$ es relevante a la consulta $q_j$ se crea el par $(d_i, q_j)$ cuya etiqueta sería [0, 1], en caso contrario la etiqueta sería [1, 0]. Se considera que uno de estos pares es negativo si su etiqueta es de la forma [1, 0], o sea, no representa una relación de relevancia. El análisis es análogo para los pares positivos. La salida del modelo simboliza el grado de similitud entre las dos sentencias.
 
 \subsubsection{Arquitectura del Modelo.}
 La idea seguida con este modelo es lograr que la extracción de características semánticas en las sentencias sea a través de una red neuronal recurrente, ya que con estas se puede atrapar mejor la estructura de la oración. Se pretende codificar la sentencia en lo que denominaremos un contexto, que sería un espacio de dimensión reducida y luego se intentará clasificar si dos contextos son similares, nuevamente con un aprendizaje profundo.
+
 La idea de este modelo es parecida a los sistemas word2vec utilizados para la proyección de las palabras en un espacio y forzando que esta representación sea buena resolviendo problemas de similaridad semántica entre las palabras. Ahora se propone hacer lo mismo con las oraciones forzando a que el espacio donde sean proyectadas sea bueno para resolver el problema de la similitud entre dos oraciones respecto a su semántica y contexto. 
+
 Se añadió una capa Dropout para prevenir el overfitting. Sin embargo, dada la naturaleza de los datos donde predominan más las relaciones de no relevancia, el entrenamiento con muchos pares negativos no arrojaba buenos comportamientos del modelo, por lo que decidió entrenar con distintas cantidades de estos. Finalmente se adiciona un acapa densa como clasificador con función de activación softmax. La capa de salida está conformada por un vector de dimensión 2, donde la primera componente significa el nivel de disimilitud y la segunda componente el nivel de similitud entre las dos sentencias. La relevancia o no estaría determinada por el mayor de estos valores.
 
 \begin{figure}
 	\begin{center}
 		\includegraphics[width=\linewidth]{ ./images/lstm.jpg}
-		\caption{Esquema}
+		\caption{Esquema del modelo neuronal con redes LSTM.}
 		\label{lstm}
 	\end{center}
 \end{figure}
 
-\section{Expansión de consultas}
+\subsection{Modelo Neuronal inspirado en MatchPyramid}
+
+ En este último modelo decidimos explorar otras aproximaciones a la forma de determinar la similaridad semántica entre la consulta y un documento en particular. Para ello escogimos inspirarnos en modelo MatchPyramid \cite{193} que ha sido utilizado en tareas de \textit{text matching} y específicamente se ha estudiado su uso en recuperación de información \cite{194}. 
+  
+La motivación detrás de MatchPyramid se basa en el éxito alcanzado por las CNN en el reconocimiento de imágenes dada su capacidad de abstraer patrones visuales. Por tanto propone resolver el problema de \textit{text matching} de una manera análoga al reconocimiento de imágenes. Para ello se hace uso de una matriz de \textit{matching} $M$ entre la consulta y el documento. Como se muestra en la Ecuación \ref{eq1} cada elemento $M{ij}$ va a representar la similaridad entre la palabra $w_i$ de la consulta y la palabra $w_j$ del documento, donde dicha similaridad va a estar dada por un operador $\otimes$ entre la repesentación vectorial de cada palabra, en este caso usaremos el producto. 
+ \begin{equation}
+ \label{eq1}
+ M_{ij} = w_i \otimes w_j
+ \end{equation}  
+ La matriz $M$ construida sería lo que se considera la ''imagen'' y va a ser procesada por una capa convolucional con la que se pretende extraer diferentes niveles de patrones.
+
+
+\begin{figure}
+	\begin{center}
+		\includegraphics[width=\linewidth]{ ./images/match.jpg}
+		\caption{Esquema del modelo neuronal.}
+		\label{matchpyramid}
+	\end{center}
+\end{figure}
+
+\section{Expansión de Consultas}
 El proceso de expansión de consultas es una técnica que tiene como objetivo enriquecer el contenido de la consulta con palabras adicionales, generalmente tomadas del vocabulario. Las palabras agregadas, llamados candidatos de expansión, se suponen que ayudan al proceso de matching del modelo a encontrar los documentos relevantes y resolver ambig\"uedades en consultas cortas. A pesar de no implementar esta variante de retroalimentación en el proyecto, consideramos importante reflejar el estudio realizado sobre las distintas alternativas existentes en el estado del arte, específicamente con la aplicación de word embeddings.  
 
-Si se pretende emplear word embeddings para realizar este proceso, en lugar de "matchear" la consulta y el documento en el espacio latente, los vectores de palabras son usados para encontrar buenos candidatos para expandir la consulta. La selección de los mismos generalmente está basada en un vocabulario global, donde es usada una función de similaridad para obtener los términos correctos. Varios métodos [\cite{160}, \cite{190}, \cite{191}, \cite{165}] han sido propuestos para estimar la relevancia de los términos candidatos para la consulta. La mayoría de estos comparten un procedimiento: primero se realiza una comparación de las representaciones vectoriales de cada término candidato contra cada término de la consulta y es determinada una puntuación para cada uno de los candidatos. Luego son tomados los $k$ primeros términos y agregados al final de la consulta. Algunos modelos \cite{192} pueden adicionar métodos de filtrado, como la matriz de ocurrencia entre los términos candidatos y las palabras de la consulta. 
+Si se pretende emplear word embeddings para realizar este proceso, en lugar de realizar un \textit{matching} entre la consulta y el documento en el espacio latente, los vectores de palabras son usados para encontrar buenos candidatos para expandir la consulta. La selección de los mismos generalmente está basada en un vocabulario global, donde es usada una función de similaridad para obtener los términos correctos. Varios métodos [\cite{160}, \cite{190}, \cite{191}, \cite{165}] han sido propuestos para estimar la relevancia de los términos candidatos para la consulta. La mayoría de estos comparten un procedimiento: primero se realiza una comparación de las representaciones vectoriales de cada término candidato contra cada término de la consulta y es determinada una puntuación para cada uno de los candidatos. Luego son tomados los $k$ primeros términos y agregados al final de la consulta. Algunos modelos \cite{192} pueden adicionar métodos de filtrado, como la matriz de ocurrencia entre los términos candidatos y las palabras de la consulta. 
 
 Por ejemplo en \cite{190} se proponen tres métodos que usan el embedding de cada término individual. A continuación se detallan brevemente:
 \\
@@ -373,7 +451,9 @@ Esta propuesta es una extensión de \textit{pre-retrieval kNN}, variando la form
 
 \bibitem{192} Navid Rekabsaz, Mihai Lupu, Allan Hanbury, and Hamed Zamani. Word embedding causes topic shifting; exploit global context! In Proceedings of the 40th International ACM SIGIR Conference on Research and Development in Information Retrieval, SIGIR ’17, pages 1105–1108, New York, NY, USA, 2017. ACM.
 
+\bibitem{194} Pang, L., Y. Lan, J. Guo, J. Xu, and X. Cheng. 2016a. “A study of match pyramid models on ad-hoc retrieval”. arXiv preprint arXiv:1606.04648.
 
+\bibitem{193} Pang, L., Y. Lan, J. Guo, J. Xu, S. Wan, and X. Cheng. 2016b. “Text Matching as Image Recognition”. In: Proc. AAAI.
 
 
 \end{thebibliography}
