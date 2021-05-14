@@ -15,20 +15,21 @@ from keras.models import load_model
 r = random.Random()
 r.seed(99)
 
-def select_model(m, dataset):
+def select_neuralmodel(m, dataset):
+    print("model ", m, " dataset ", dataset)
     if m == 2:
         if dataset == 1:
             return load_model("./models/lstmmodel_med10-15.h5")
         elif dataset == 2:
             return load_model("./models/cisi_50_10_15.h5")
-        else
+        else:
             return load_model("./models/cran_50_10_5.h5")
     if m == 3:
         if dataset == 1:
             return load_model("./models/lstmmodel_med10-15.h5")
         elif dataset == 2:
             return load_model("./models/cisi_50_10_15.h5")
-        else
+        else:
             return load_model("./models/cran_50_10_5.h5")
     
 def select_dataset(n):
@@ -62,9 +63,7 @@ def execute_query(q_id, vquery, docs_dict, relevances, w2v_dict, model):
         solve = model.predict(pair)[0]
         # print(solve, solve[1])
         r.append((d_id, solve[1]))
-    print("r:", r)
     r = sorted(r, key=itemgetter(1), reverse=True)
-    print("rs", r)
     ranking[q_id] = r[0: 20]
     return ranking
         
@@ -104,9 +103,9 @@ def main():
         dataset = -1
 
         while 1:
-            index = int(input('\t\t > '))
+            dataset = int(input('\t\t > '))
 
-            if index >= 1 and index <= 3:
+            if dataset >= 1 and dataset <= 3:
                 break
             else:
                 print('\n\t\t Please, select a valid dataset...\n')
@@ -119,14 +118,28 @@ def main():
         
         if model == 1:
             print("Search for result in Vectorial Model...\n\n")
-
+            system = VectSystem(pdocs, relevances)
+            system.run_system(queries_dict[q_id], q_id, 1)
+            evaluator = IREvaluator(relevances, system.ranking_querys)
+            p, r = evaluator.evaluate_query(q_id)       
+            
         elif model == 2:
             print("Search for result in LSTM Model...\n\n")
-            vquery = doc2vector(pquery, w2v_dict)
-            model = select_model(model)
-            rank = execute_query(q_id, vquery, docs_dict, relevances, w2v_dict, model)
-            evaluator = IREvaluator(relevances, rank)
-            p, r = evaluator.evaluate_query(q_id)
+            prec = []
+            rec = []
+            model = select_neuralmodel(model, dataset)
+            for q_id, pquery in queries_dict.items():
+                vquery = doc2vector(pquery, w2v_dict)
+                
+                rank = execute_query(q_id, vquery, docs_dict, relevances, w2v_dict, model)
+                evaluator = IREvaluator(relevances, rank)
+                p, r = evaluator.evaluate_query(q_id)
+                prec.append(p)
+                prec.append(r)
+            ps = sum(prec)
+            rs = sum(rec)
+            print("\n ---------> Precisión final: ", float(ps)/len(queries_dict) )
+            print("\n ---------> Recall final: ", float(rs)/len(queries_dict) )
 
         elif  model == 3:
             print("Search for result in Matching Pyramid Model...")
