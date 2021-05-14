@@ -14,9 +14,13 @@ r = random.Random()
 r.seed(99)
 
 def testLSTMModel():
-    docs, docs_dict = dataset_dict('../dataset/yolanda/corpus/MED.ALL')
-    queries, queries_dict = dataset_dict('../dataset/yolanda/queries/MED.QRY')
-    relevances = read_relevances('../dataset/yolanda/relevance/MED.REL')
+    # docs, docs_dict = dataset_dict('../dataset/yolanda/corpus/MED.ALL')
+    # queries, queries_dict = dataset_dict('../dataset/yolanda/queries/MED.QRY')
+    # relevances = read_relevances('../dataset/yolanda/relevance/MED.REL')
+
+    docs_dict, pdocs = read_all('../dataset/jsons/CRAN.ALL.json')
+    queries_dict, pqueries = read_qry('../dataset/jsons/CRAN.QRY.json')
+    relevances = read_rel('../dataset/jsons/CRAN.REL.json', len(pqueries))
 
     # docs_dict, pdocs = read_all('../dataset/jsons/CISI.ALL.json')
     # queries_dict, pqueries = read_qry('../dataset/jsons/CISI.QRY.json')
@@ -44,13 +48,13 @@ def testLSTMModel():
     print(end - start)
 
 def testVectModel():
-    # pdocs, docs_dict = dataset_dict('../dataset/yolanda/corpus/MED.ALL')
-    # pqueries, queries_dict = dataset_dict('../dataset/yolanda/queries/MED.QRY')
-    # relevances = read_relevances('../dataset/yolanda/relevance/MED.REL')
+    pdocs, docs_dict = dataset_dict('../dataset/yolanda/corpus/MED.ALL')
+    pqueries, queries_dict = dataset_dict('../dataset/yolanda/queries/MED.QRY')
+    relevances = read_relevances('../dataset/yolanda/relevance/MED.REL')
 
-    docs_dict, pdocs = read_all('../dataset/jsons/CRAN.ALL.json')
-    queries_dict, pqueries = read_qry('../dataset/jsons/CRAN.QRY.json')
-    relevances = read_rel('../dataset/jsons/CRAN.REL.json', len(pqueries))
+    # docs_dict, pdocs = read_all('../dataset/jsons/CRAN.ALL.json')
+    # queries_dict, pqueries = read_qry('../dataset/jsons/CRAN.QRY.json')
+    # relevances = read_rel('../dataset/jsons/CRAN.REL.json', len(pqueries))
 
     # docs_dict, pdocs = read_all('../dataset/jsons/CISI.ALL.json')
     # queries_dict, pqueries = read_qry('../dataset/jsons/CISI.QRY.json')
@@ -75,8 +79,8 @@ def testVectModel():
 
 
 def main():
-    # testLSTMModel()
-    testVectModel()
+    testLSTMModel()
+    # testVectModel()
 
    
     

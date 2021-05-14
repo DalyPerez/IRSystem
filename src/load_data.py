@@ -99,7 +99,6 @@ def read_qry(json_path):
     pqueries = []
 
     for k, info in queries.items():
-        print(k)
         pquery = preprocess_document(info['text'])
         queries_proc[int(k)] = pquery
         pqueries.append(pquery)
@@ -130,10 +129,10 @@ def save_words_info2(wembedding, file_name, pdocs, pqueries):
 
 def main():
     print("load dataset")
-    docs_d, pdocs = read_all('../dataset/jsons/CISI.ALL.json')
-    queries_d, pqueries = read_qry('../dataset/jsons/CISI.QRY.json')
+    docs_d, pdocs = read_all('../dataset/jsons/CRAN.ALL.json')
+    queries_d, pqueries = read_qry('../dataset/jsons/CRAN.QRY.json')
     print(len(pdocs), len(pqueries))
-    save_words_info2('glove-wiki-gigaword-300', './word2vect/ciri300.bin', pdocs, pqueries)
+    save_words_info2('glove-wiki-gigaword-50', './word2vect/cran50.bin', pdocs, pqueries)
 
 if __name__ == "__main__":
     main()
