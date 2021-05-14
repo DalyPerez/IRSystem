@@ -14,20 +14,20 @@ r = random.Random()
 r.seed(99)
 
 def testLSTMModel():
-    # docs, docs_dict = dataset_dict('../dataset/yolanda/corpus/MED.ALL')
-    # queries, queries_dict = dataset_dict('../dataset/yolanda/queries/MED.QRY')
-    # relevances = read_relevances('../dataset/yolanda/relevance/MED.REL')
+    docs, docs_dict = dataset_dict('../dataset/yolanda/corpus/MED.ALL')
+    queries, queries_dict = dataset_dict('../dataset/yolanda/queries/MED.QRY')
+    relevances = read_relevances('../dataset/yolanda/relevance/MED.REL')
 
-    docs_dict, pdocs = read_all('../dataset/jsons/CISI.ALL.json')
-    queries_dict, pqueries = read_qry('../dataset/jsons/CISI.QRY.json')
-    relevances = read_rel('../dataset/jsons/CISI.REL.json', len(pqueries))
+    # docs_dict, pdocs = read_all('../dataset/jsons/CISI.ALL.json')
+    # queries_dict, pqueries = read_qry('../dataset/jsons/CISI.QRY.json')
+    # relevances = read_rel('../dataset/jsons/CISI.REL.json', len(pqueries))
 
     true, false, relpairs = conforms_pairs(relevances, len(docs_dict))
     print(len(true), len(false), len(relpairs))
     
     r.shuffle(false)
 
-    m = len(false) // 2
+    m = len(false) // 10
     false = false[:m]
     relpairs = true + false
     r.shuffle(relpairs)
@@ -48,18 +48,13 @@ def testVectModel():
     # pqueries, queries_dict = dataset_dict('../dataset/yolanda/queries/MED.QRY')
     # relevances = read_relevances('../dataset/yolanda/relevance/MED.REL')
 
-    # docs_dict, pdocs = read_all('../dataset/jsons/CRAN.ALL.json')
-    # queries_dict, pqueries = read_qry('../dataset/jsons/CRAN.QRY.json')
-    # relevances = read_rel('../dataset/jsons/CRAN.REL.json', len(pqueries))
+    docs_dict, pdocs = read_all('../dataset/jsons/CRAN.ALL.json')
+    queries_dict, pqueries = read_qry('../dataset/jsons/CRAN.QRY.json')
+    relevances = read_rel('../dataset/jsons/CRAN.REL.json', len(pqueries))
 
-    docs_dict, pdocs = read_all('../dataset/jsons/CISI.ALL.json')
-    queries_dict, pqueries = read_qry('../dataset/jsons/CISI.QRY.json')
-    relevances = read_rel('../dataset/jsons/CISI.REL.json', len(pqueries))
-
-    # l = [len(d) for d in pdocs]
-    # sd = sum(l)
-    # sq = sum(len(d) for d in pqueries)
-    # print( "-> sum", sd/len(pdocs), sq/len(pqueries), max(l))
+    # docs_dict, pdocs = read_all('../dataset/jsons/CISI.ALL.json')
+    # queries_dict, pqueries = read_qry('../dataset/jsons/CISI.QRY.json')
+    # relevances = read_rel('../dataset/jsons/CISI.REL.json', len(pqueries))
 
     system = VectSystem(pdocs, relevances)
     
@@ -80,8 +75,8 @@ def testVectModel():
 
 
 def main():
-    testLSTMModel()
-    # testVectModel()
+    # testLSTMModel()
+    testVectModel()
 
    
     

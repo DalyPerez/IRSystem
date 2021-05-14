@@ -99,6 +99,7 @@ def read_qry(json_path):
     pqueries = []
 
     for k, info in queries.items():
+        print(k)
         pquery = preprocess_document(info['text'])
         queries_proc[int(k)] = pquery
         pqueries.append(pquery)
