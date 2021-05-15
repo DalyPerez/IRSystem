@@ -197,7 +197,7 @@
 \maketitle              % typeset the title of the contribution
 
 \begin{abstract}
-TODO
+La Recuperación de Información (RI) es la ciencia que permite el almacenamiento y rápido acceso a gran cantidad de información. Machine Learning juega un importante rol en muchos aspectos en los sistemas de RI modernos. Este trabajo presenta los resultados de una profunda investigación realizada sobre el potencial de las Redes Neuronales en este tema. Inicialmente se propone una versión de modelo vectorial utilizando herramientas avanzadas en procesamiento de lenguaje natural y también dos enfoques diferentes de modelos neuronales. Destacando la utilidad de las redes LSTM y el modelo \textit{MatchPyramid}. 
 
 \keywords{TODO}
 
@@ -209,11 +209,13 @@ La Recuperación de Información (RI) es un campo de la informática que permite
 
 Los modelos de RI se proponen e implementan para hacer frente al objetivo principal de RI, recuperar información relevante para una consulta. La mayoría de los modelos de RI se basan en el mismo supuesto, los documentos y consultas se representan como Bag-of-Words(BoW) o bolsa de palabras en español y la relevancia se interpreta de la misma forma que la coincidencia léxica entre palabras de consulta y palabras de documento. Estos modelos estiman el ranking de relevancia basándose en la coincidencia exacta entre las palabras de las secuencias de texto de entrada. Por lo tanto, algunos documentos devueltos por el SRI no siempre satisfacen la intención del usuario con la consulta. Esta limitación se debe a las representaciones de BoW, las cuales consideran cada secuencia de texto como un conjunto de palabras independientes. El problema principal resultado de estos enfoques es el desajuste de vocabulario. Este consiste en usar un vocabulario diferente en la consulta y sus correspondientes relevantes resultados (documentos).
 
-Nuestra propuesta inicial fue una aproximación de un modelo Vectorial, auxiliándonos de herramientas avanzadas para el procesamiento de texto y la representación vectorial de las sentencias mediante diferentes pesos. Este acercamiento no proporcionó buenos resultados por lo que se decidió guiar la investigación hacia otras lineas de estudio.
-En los últimos años se han dedicado grandes esfuerzos al intento de mejorar el rendimiento de los sistemas de RI y la investigación ha explorado muchas direcciones diferentes tratando de utilizar los provechosos resultados obtenidos en otras áreas. En este trabajo investigaremos la posibilidad de utilizar Redes Neuronales en RI. 
+Nuestra propuesta inicial fue una aproximación de un modelo Vectorial, auxiliándonos de herramientas avanzadas para el procesamiento de texto y la representación vectorial de las sentencias mediante diferentes pesos. Este acercamiento no proporcionó buenos resultados por lo que se decidió guiar la investigación hacia otras lineas de estudio. En los últimos años se han dedicado grandes esfuerzos al intento de mejorar el rendimiento de los sistemas de RI y la investigación ha explorado muchas direcciones diferentes tratando de utilizar los provechosos resultados obtenidos en otras áreas. En este trabajo investigaremos la posibilidad de utilizar Redes Neuronales en RI. 
+
 Los modelos neuronales aprenden representaciones del lenguaje a partir del texto procesado lo cual puede salvar la brecha entre el vocabulario de consultas y documentos. Una consulta, normalmente contiene poca cantidad de términos, mientras que la longitud de los documentos, dependiendo del escenario, puede variar desde unos pocos términos hasta cientos de oraciones o más. Los modelos para RI utilizan representaciones vectoriales de texto y, por lo general, contienen una gran cantidad de parámetros que necesitan ser ajustados. El aprendizaje de representaciones adecuadas de texto también exige conjuntos de datos a gran escala para el entrenamiento. Por lo tanto, a diferencia de los modelos de RI clásicos, estos enfoques neuronales tienden a consumir datos, con un rendimiento que mejora con más datos de entrenamientos.
 
-Impulsado por los avances que ha tenido el aprendizaje profundo en investigaciones de visión por computadora, las redes neuronales han resurgido como un paradigma popular de aprendizaje de máquina en muchas otras direcciones de investigación, incluida la recuperación de información. Uno de nuestros modelos pretende extraer las características semánticas de las sentencias a través de redes neuronales recurrentes, específicamente 2 redes LSTM, una para codificar la consulta y otra para el documento. Las componentes principales son los embeddings a nivel de palabras utilizados, los vectores de sentencia y el comparador inmerso en el modelo. Otro de los modelos hará uso principalmente de una matriz de \textit{matching} entre la consulta y el documento, la cual será procesada por una Red Convolucional (CNN) con el objetivo de extraer patrones que resulten útiles para determinar similaridad.   
+Impulsado por los avances que ha tenido el aprendizaje profundo en investigaciones de visión por computadora, las redes neuronales han resurgido como un paradigma popular de aprendizaje de máquina en muchas otras direcciones de investigación, incluida la recuperación de información. Uno de nuestros modelos pretende extraer las características semánticas de las sentencias a través de redes neuronales recurrentes, específicamente 2 redes LSTM, una para codificar la consulta y otra para el documento. Las componentes principales son los embeddings a nivel de palabras utilizados, los vectores de sentencia y el comparador inmerso en el modelo. Otro de los modelos hará uso principalmente de una matriz de \textit{matching} entre la consulta y el documento, la cual será procesada por una Red Convolucional (CNN) con el objetivo de extraer patrones que resulten útiles para determinar similaridad.
+
+La implementación del trabajo fue desarrollada en el lenguaje de programación \textit{Python} y se empleó la librería \textit{Keras} para la representación y evaluación de los modelos neuronales propuestos.
 %
 \section{Trabajos Relacionados}
 %
@@ -275,7 +277,7 @@ Finalmente es necesario evaluar la similaridad entre el conjunto de documentos y
 \end{figure}
 
 
-\subsubsection{Evaluación.} En las Tablas \ref{medline}, \ref{cisi}, \ref{cran} se muestran los valores obtenidos de promediar la precisión y el recobrado obtenidos al aplicar cada uno de los modelos a las colecciones de prueba seleccionadas.
+\subsubsection{Evaluación.} En las Tablas \ref{medline}, \ref{cisi}, \ref{cran} se muestran los valores obtenidos de promediar la precisión y el recobrado obtenidos al aplicar cada uno de los modelos a las colecciones de prueba seleccionadas. Como se puede observar, los resultados para nada son buenos, con muy bajos niveles de precisión y recobrado. El modelo TdidfModel arrojó mejores valores de estas métricas en los tres datasets empleados. En general son mejores los resultados en el dataset Medline lo cual puede deberse a la dimensión del dataset, teniendo menor cantidad de documentos y consultas.
 
 \begin{table}[h]
 	\caption{Dataset: Medline (documentos: 1033 consultas: 30)}
@@ -391,6 +393,24 @@ Por ejemplo en \cite{190} se proponen tres métodos que usan el embedding de cad
 \textbf{Pre-retrieval incremental kNN}
 Esta propuesta es una extensión de \textit{pre-retrieval kNN}, variando la forma de calcular $NN(q)$, siendo ahora de forma incremental. Se realiza un proceso iterativo sobre la lista $NN(q)$ de los candidatos aportados por el término $q$ de la consulta. Sea $NN_l(q) = [t_1, t_2, ..., t_n]$ se consideran los primeros $k$ términos, o sea, $[t_1, t_2, ..., t_{n-k}]$. Luego se toma $t_1$ y se reordena la lista anterior con respecto a la similaridad con $t_1$. Este proceso continúa durante $l$ iteraciones.
 
+\section{Recomendaciones}
+
+Al analizar los desalentadores resultados obtenidos, proponemos para futuros trabajos realizar algunas modificaciones y utilizar otras herramientas.
+
+\begin{enumerate}
+	\item Las redes neuronales son muy sensibles a los hiperparámetros por lo que se considera interesante probar varios cambios en estos para alcanzar mejores resultados.
+	\item Representar las sentencias mediante n-grams para obtener una encapsulación de entidades más completas, donde se tengan en cuenta las relaciones de posición entre términos.
+	\item En el modelo MatchPyramid utilizar otros operadores en el cálculo de la matriz $M$.
+	\item Implementar técnicas de retroalimentación como expansión de consultas. 
+	\item Probar con otros corpus donde la cantidad de relaciones de relevancia no sea tan pequeña.
+	\item Investigar sobre las ventajas que pudiéramos obtener con el uso del modelo Bidirectional Encoder Representations from Transformers(BERT) el cual tiene altas potencialidades capturando las características semánticas en un contexto.
+\end{enumerate}
+* 
+* 
+* 
+* 
+* 
+* 
 
 \section{Conclusiones}
      
