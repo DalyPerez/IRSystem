@@ -121,7 +121,7 @@ def main():
             system = VectSystem(pdocs, relevances)
             system.run_system(queries_dict[q_id], q_id, 1)
             evaluator = IREvaluator(relevances, system.ranking_querys)
-            p, r, rank = evaluator.evaluate_query(q_id)
+            p, r, f1, rank = evaluator.evaluate_query(q_id)
             print("\n--> The recovered documents are:")
             print(rank) 
             print("----------------------------------------------------------------------")   
@@ -149,7 +149,7 @@ def main():
                 
             rank = execute_query(q_id, vquery, docs_dict, relevances, w2v_dict, model)
             evaluator = IREvaluator(relevances, rank)
-            p, r, rank = evaluator.evaluate_query(q_id)
+            p, r, f1, rank = evaluator.evaluate_query(q_id)
             
             print("\n--> The recovered documents are:")
             print(rank)
