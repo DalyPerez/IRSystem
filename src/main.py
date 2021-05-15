@@ -63,7 +63,6 @@ def execute_query(q_id, vquery, docs_dict, relevances, w2v_dict, model):
         vdoc = doc2vector(pdoc, w2v_dict)
         pair = [np.array([vquery]), np.array([vdoc])]
         solve = model.predict(pair)[0]
-        # print(solve, solve[1])
         r.append((d_id, solve[1]))
     r = sorted(r, key=itemgetter(1), reverse=True)
     ranking[q_id] = r[0: 20]
@@ -112,44 +111,48 @@ def main():
             else:
                 print('\n\t\t Please, select a valid dataset...\n')
         
-        q_id = int(input("\n-> Write a query id: "))
+        q_id = int(input("\n--> Write a query id: "))
         pdocs, docs_dict, pqueries, queries_dict, relevances, w2v_dict = select_dataset(dataset)
         pquery = queries_dict[q_id]
         print("-- Preprocessed Query: ", pquery)
 
         
         if model == 1:
-            print("Search for result in Vectorial Model...\n\n")
             system = VectSystem(pdocs, relevances)
             system.run_system(queries_dict[q_id], q_id, 1)
             evaluator = IREvaluator(relevances, system.ranking_querys)
-            p, r = evaluator.evaluate_query(q_id)       
+            p, r, rank = evaluator.evaluate_query(q_id)
+            print("\n--> The recovered documents are:")
+            print(rank) 
+            print("----------------------------------------------------------------------")   
             
         elif model == 2:
-            print("Search for result in LSTM Model...\n\n")
-            prec = []
-            rec = []
-            model = select_neuralmodel(model, dataset)
-            for q_id, pquery in queries_dict.items():
-                vquery = doc2vector(pquery, w2v_dict)
+            # print("Search for result in LSTM Model...\n\n")
+            # prec = []
+            # rec = []
+            # model = select_neuralmodel(model, dataset)
+            # for q_id, pquery in queries_dict.items():
+            #     vquery = doc2vector(pquery, w2v_dict)
                 
-                rank = execute_query(q_id, vquery, docs_dict, relevances, w2v_dict, model)
-                evaluator = IREvaluator(relevances, rank)
-                p, r = evaluator.evaluate_query(q_id)
-                prec.append(p)
-                prec.append(r)
-            ps = sum(prec)
-            rs = sum(rec)
-            print("\n ---------> Precisión final: ", float(ps)/len(queries_dict) )
-            print("\n ---------> Recall final: ", float(rs)/len(queries_dict) )
+            #     rank = execute_query(q_id, vquery, docs_dict, relevances, w2v_dict, model)
+            #     evaluator = IREvaluator(relevances, rank)
+            #     p, r = evaluator.evaluate_query(q_id)
+            #     prec.append(p)
+            #     prec.append(r)
+            # ps = sum(prec)
+            # rs = sum(rec)
+            # print("\n ---------> Precisión final: ", float(ps)/len(queries_dict) )
+            # print("\n ---------> Recall final: ", float(rs)/len(queries_dict) )
 
-            print("Search for result in LSTM Model...\n\n") #for a simple query
             model = select_neuralmodel(model, dataset)
             vquery = doc2vector(pquery, w2v_dict)
                 
             rank = execute_query(q_id, vquery, docs_dict, relevances, w2v_dict, model)
             evaluator = IREvaluator(relevances, rank)
-            p, r = evaluator.evaluate_query(q_id)
+            p, r, rank = evaluator.evaluate_query(q_id)
+            
+            print("\n--> The recovered documents are:")
+            print(rank)
            
 
         elif  model == 3:

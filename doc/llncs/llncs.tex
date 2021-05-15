@@ -277,7 +277,7 @@ Finalmente es necesario evaluar la similaridad entre el conjunto de documentos y
 
 
 \subsubsection{Evaluación.} 
-En las Tablas \ref{medline}, \ref{cisi}, \ref{cran} se muestran los valores obtenidos de promediar la precisión y el recobrado obtenidos al aplicar cada uno de los modelos a las colecciones de prueba seleccionadas. Como se puede observar, los resultados para nada son buenos, con muy bajos niveles de precisión y recobrado. El modelo TdidfModel arrojó mejores valores de estas métricas en los tres datasets empleados. En general son mejores los resultados en el dataset Medline lo cual puede deberse a la dimensión del dataset, teniendo menor cantidad de documentos y consultas.
+En las Tablas \ref{medline}, \ref{cisi}, \ref{cran} se muestran los valores obtenidos de promediar la precisión y el recobrado obtenidos al aplicar cada uno de los modelos a las colecciones de prueba seleccionadas. El \textit{ranking} devuelto en cada caso tiene una cantidad máxima de 50 documentos y son eliminados aquellos documentos cuya similaridad fue nula. Como se puede observar, los resultados para nada son buenos, con muy bajos niveles de precisión y recobrado. El modelo TdidfModel arrojó mejores valores de estas métricas en los tres datasets empleados. En general son mejores los resultados en el dataset Medline lo cual puede deberse a la dimensión del dataset, teniendo menor cantidad de documentos y consultas.
 
 \begin{table}
 	\caption{Dataset: Medline (documentos: 1033 consultas: 30)}

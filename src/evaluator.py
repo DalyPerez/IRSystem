@@ -10,7 +10,6 @@ class IREvaluator(object):
 
         query_rel = self.relevance_docs[query_id]
         ranking = self.ranking_querys[query_id]
-        print(ranking)
         ranking = [(d, s) for (d, s) in ranking if s > 0.0]
   
         for (d, s) in ranking: 
@@ -35,10 +34,11 @@ class IREvaluator(object):
         precision = self.get_precision(true_pos, len(rank))
         recall = self.get_recall(true_pos, q_relevants_docs)
 
-        print('*** Results Query ', query_id, ' ***')
+        print('\n--> Results Query ', query_id, )
         print('Precision: ', precision, 'Recall: ', recall)
 
-        return precision, recall
+        docs_r = [d for (d, s) in rank]
+        return precision, recall, docs_r
 
     def get_similarity(self, query_id ):
         """
