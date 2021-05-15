@@ -28,6 +28,8 @@ class IREvaluator(object):
         return float(true_positives)/ float(relevant_docs)
     
     def get_f1(self, P, R):
+        if (P + R == 0):
+            return 0
         return float(2*P*R)/(P + R)
 
     def evaluate_query(self, query_id):

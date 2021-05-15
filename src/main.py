@@ -16,7 +16,6 @@ r = random.Random()
 r.seed(99)
 
 def select_neuralmodel(m, dataset):
-    print("model ", m, " dataset ", dataset)
     if m == 2:
         return load_model("./models/cisi_50_10_15.h5")
     if m == 3:
