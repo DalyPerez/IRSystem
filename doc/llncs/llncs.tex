@@ -323,30 +323,28 @@ En las Tablas \ref{medline}, \ref{cisi}, \ref{cran} se muestran los valores obte
 
 A continuación se muestran ejemplos de la ejecución de este modelo con varias consultas.
 
-\textbf{consulta original 1: } the crystalline lens in vertebrates, including humans.
+\textbf{consulta original 2: } the relationship of blood and cerebrospinal fluid oxygen concentrations
+or partial pressures.  a method of interest is polarography.
 
 
 \begin{figure}
 	\begin{center}
-		\includegraphics[width=\linewidth]{ ./images/v-med-q1.png}
-		\caption{ Id de consulta: 1 Dataset: Medline }
+		\includegraphics[width=\linewidth]{ ./images/v-med-q2.png}
+		\caption{ Id de consulta: 2  Dataset: Medline }
 		\label{vect_q1}
 	\end{center}
 \end{figure}
 
 
-\textbf{consulta original 4: } can a criterion be developed to show empirically the validity of flow solutions for chemically reacting gas mixtures based on the simplifying assumption of instantaneous local chemical equilibrium 
+\textbf{consulta original 2: } what are the structural and aeroelastic problems associated with flight of high speed aircraft .
 
 \begin{figure}
 	\begin{center}
-		\includegraphics[width=\linewidth]{ ./images/v-cran-q4.png}
-		\caption{ Id de consulta: 4 Dataset: Cranfield }
+		\includegraphics[width=\linewidth]{ ./images/v-cran-q2.png}
+		\caption{ Id de consulta: 2  Dataset: Cranfield }
 		\label{vect_q4}
 	\end{center}
 \end{figure}
-
-
-
 
 
 \subsection{Modelo Neuronal con Redes LSTM}
@@ -379,9 +377,29 @@ Se añadió una capa Dropout para prevenir el overfitting. Sin embargo, dada la 
 
 Este modelo fue entrenado usando la colección de datos CISI. El proceso de \textit{tuning} de los hyperparámetros del modelos se hizo de forma manual, usando una parte de los datos como conjunto de validación y la cantidad de épocas se seleccionó según el comportamiento que mostraban las curvas de entrenamiento.
 
-A continuación se muestran ejemplos de consultas realizadas 
+
+
 
 \subsubsection{Evaluación.}
+
+A continuación se muestran ejemplos de las consultas realizadas anteriormente en el modelo vectorial: 
+
+
+\begin{figure}
+	\begin{center}
+		\includegraphics[width=\linewidth]{ ./images/lstm-med-q2.png}
+		\caption{ Id de consulta: 2 Dataset: Medline }
+		\label{cran_q1}
+	\end{center}
+\end{figure}
+
+\begin{figure}
+	\begin{center}
+		\includegraphics[width=\linewidth]{ ./images/lstm-cran-q2.png}
+		\caption{ Id de consulta: 2 Dataset: Cranfield }
+		\label{cran_q2}
+	\end{center}
+\end{figure}
 
 \subsection{Modelo Neuronal inspirado en MatchPyramid}
 
