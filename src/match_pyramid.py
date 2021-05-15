@@ -29,9 +29,6 @@ class MatchPyramidModel:
         z=Conv2D(filters=32, kernel_size=[1,3], padding='same', activation='relu')(layer1_dot)
         z=MaxPooling2D(pool_size=(3, 10))(z)
 
-        # z=Conv2D(filters=32, kernel_size=[1,3], padding='same', activation='relu')(z)
-        # z=MaxPooling2D(pool_size=(3, 10))(z)
-
         pool1_flat=Flatten()(z)
         pool1_flat_drop=Dropout(rate=0.5)(pool1_flat)
         mlp1=Dense(32)(pool1_flat_drop)
@@ -40,8 +37,6 @@ class MatchPyramidModel:
         out=Dense(2, activation='softmax')(mlp1)
             
         self.model = Model(inputs=[query, doc], outputs=out)
-
-        # adam = keras.optimizers.Adam(learning_rate=0.0001)
 
         self.model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['acc'])
         self.model.summary()
