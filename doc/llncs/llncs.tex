@@ -321,6 +321,32 @@ En las Tablas \ref{medline}, \ref{cisi}, \ref{cran} se muestran los valores obte
 	\end{tabular} 
 \end{table}
 
+A continuación se muestran ejemplos de la ejecución de este modelo con varias consultas.
+
+\textbf{consulta original 2: } the relationship of blood and cerebrospinal fluid oxygen concentrations
+or partial pressures.  a method of interest is polarography.
+
+
+\begin{figure}
+	\begin{center}
+		\includegraphics[width=\linewidth]{ ./images/v-med-q2.png}
+		\caption{ Id de consulta: 2  Dataset: Medline }
+		\label{vect_q1}
+	\end{center}
+\end{figure}
+
+
+\textbf{consulta original 2: } what are the structural and aeroelastic problems associated with flight of high speed aircraft .
+
+\begin{figure}
+	\begin{center}
+		\includegraphics[width=\linewidth]{ ./images/v-cran-q2.png}
+		\caption{ Id de consulta: 2  Dataset: Cranfield }
+		\label{vect_q4}
+	\end{center}
+\end{figure}
+
+
 \subsection{Modelo Neuronal con Redes LSTM}
 
 Nuestra segunda propuesta estuvo motivada por el éxito de las redes Long-Short Term Memory (LSTM) en tareas de procesamiento de lenguaje natural como traducción automática, clasificación de textos, chatbots, debido a su capacidad de aprender dependencias entre términos a largo plazo. El modelo LSTM es construido a partir del modelo RNN básico, evitando una de las limitaciones de estas últimas al trabajar con largas secuencias, conocido como \textit{vanishing gradient problem}. 
@@ -349,9 +375,31 @@ Se añadió una capa Dropout para prevenir el overfitting. Sin embargo, dada la 
 	\end{center}
 \end{figure}
 
-Este modelo fue entrenado usando la coleccion de datos CISI. El proceso de \textit{tuning} de los hyperparametros del modelos se hizo de forma manual, usando una parte de los datos como conjunto de validación y la cantidad de épocas se seleccionó según el comportamiento que mostraban las curvas de entrenamiento.
+Este modelo fue entrenado usando la colección de datos CISI. El proceso de \textit{tuning} de los hyperparámetros del modelos se hizo de forma manual, usando una parte de los datos como conjunto de validación y la cantidad de épocas se seleccionó según el comportamiento que mostraban las curvas de entrenamiento.
+
+
+
 
 \subsubsection{Evaluación.}
+
+A continuación se muestran ejemplos de las consultas realizadas anteriormente en el modelo vectorial: 
+
+
+\begin{figure}
+	\begin{center}
+		\includegraphics[width=\linewidth]{ ./images/lstm-med-q2.png}
+		\caption{ Id de consulta: 2 Dataset: Medline }
+		\label{cran_q1}
+	\end{center}
+\end{figure}
+
+\begin{figure}
+	\begin{center}
+		\includegraphics[width=\linewidth]{ ./images/lstm-cran-q2.png}
+		\caption{ Id de consulta: 2 Dataset: Cranfield }
+		\label{cran_q2}
+	\end{center}
+\end{figure}
 
 \subsection{Modelo Neuronal inspirado en MatchPyramid}
 
