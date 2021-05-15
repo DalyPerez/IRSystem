@@ -99,6 +99,7 @@ def read_qry(json_path):
     pqueries = []
 
     for k, info in queries.items():
+        # print(k)
         pquery = preprocess_document(info['text'])
         queries_proc[int(k)] = pquery
         pqueries.append(pquery)
@@ -107,7 +108,7 @@ def read_qry(json_path):
 def read_rel(json_path, total_queries):
     wd = open(json_path)
     rel_dict = js.load(wd)
-    print("---------->", len(rel_dict))
+    # print("---------->", len(rel_dict))
     relevances = {}
 
     for q_id, info in rel_dict.items():

@@ -52,8 +52,6 @@ def data2train(docsdict, queriesdict, relpairs, w2v_dict):
     dataX = relpairs[step:]
     dataXV = relpairs[:step]
 
-    print(len(relpairs), len(dataX), len(dataXV))
-
     for p in dataX:
         q_id, d_id, r = p
         doc = docsdict[d_id]
@@ -151,8 +149,6 @@ def data2train_mp(docsdict, queriesdict, relpairs, w2v_dict, query_len, doc_len,
     X_query, X_doc, Y, XV_query, XV_doc, YV = [], [], [], [], [], []
     dataX = relpairs[step:]
     dataXV = relpairs[:step]
-
-    print(len(relpairs), len(dataX), len(dataXV))
 
     for p in dataX:
         q_id, d_id, r = p
