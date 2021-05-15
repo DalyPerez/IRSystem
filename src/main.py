@@ -1,9 +1,10 @@
+import os
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
 from preproc import *
 from evaluator import *
 from load_data import *
 import re
 import sys
-import os
 import csv
 from operator import itemgetter
 import numpy
@@ -19,7 +20,7 @@ def select_neuralmodel(m, dataset):
     if m == 2:
         return load_model("./models/cisi_50_10_15.h5")
     if m == 3:
-        pass
+        return load_model("./models/mp.03-0.83-0.43.h5")
     
 def select_dataset(n):
     if n == 1:
@@ -48,6 +49,18 @@ def execute_query(q_id, vquery, docs_dict, relevances, w2v_dict, model):
     r = []
     for d_id, pdoc in  docs_dict.items():
         vdoc = doc2vector(pdoc, w2v_dict)
+        pair = [np.array([vquery]), np.array([vdoc])]
+        solve = model.predict(pair)[0]
+        r.append((d_id, solve[1]))
+    r = sorted(r, key=itemgetter(1), reverse=True)
+    ranking[q_id] = r[0: 20]
+    return ranking
+
+def execute_query_mp(q_id, vquery, docs_dict, relevances, w2v_dict, model, doc_len, emb_dim):
+    ranking = {}
+    r = []
+    for d_id, pdoc in  docs_dict.items():
+        vdoc = doc2vector_mp(pdoc, w2v_dict, doc_len, emb_dim)
         pair = [np.array([vquery]), np.array([vdoc])]
         solve = model.predict(pair)[0]
         r.append((d_id, solve[1]))
@@ -142,15 +155,26 @@ def main():
             print(rank)
            
 
-        elif  model == 3:
+        elif model == 3:
+            query_len = 50
+            doc_len = 200
+            emb_size = 50
             print("Search for result in Matching Pyramid Model...")
-
+            model = select_neuralmodel(model, dataset)
+            vquery = doc2vector_mp(pquery, w2v_dict,query_len,emb_size)
+                
+            rank = execute_query_mp(q_id, vquery, docs_dict, relevances, w2v_dict, model, doc_len, emb_size)
+            evaluator = IREvaluator(relevances, rank)
+            p, r, f1, rank = evaluator.evaluate_query(q_id)
+            
+            print("\n--> The recovered documents are:")
+            print(rank)
         else:
             break
 
         
             
 
-        
+    
 
 main()
