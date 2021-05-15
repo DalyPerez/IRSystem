@@ -1,0 +1,6 @@
+python
+keras
+tensorflow
+numpy
+gensim
+nltk
