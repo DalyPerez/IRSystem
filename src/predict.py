@@ -12,7 +12,7 @@ import time, random
 from keras.models import load_model
 
 def main():
-    model = load_model("lstmmodel.h5")
+    model = load_model("./models/lstmmodel_med10-15.h5")
 
     
     docs_dict, pdocs = read_all('../dataset/jsons/CISI.ALL.json')

@@ -26,6 +26,9 @@ class IREvaluator(object):
         if (relevant_docs == 0):
             return 0
         return float(true_positives)/ float(relevant_docs)
+    
+    def get_f1(self, P, R):
+        return float(2*P*R)/(P + R)
 
     def evaluate_query(self, query_id):
         rank, true_pos, false_pos = self.relevant_doc_retrieved(query_id)
@@ -33,11 +36,13 @@ class IREvaluator(object):
 
         precision = self.get_precision(true_pos, len(rank))
         recall = self.get_recall(true_pos, q_relevants_docs)
+        f1 = self.get_f1(precision, recall)
 
-        # print('*** Results Query ', query_id, ' ***')
-        # print('Precision: ', precision, 'Recall: ', recall)
+        print('\n--> Results Query ', query_id, )
+        print('Precision: ', precision, '\nRecall: ', recall, '\nF1: ', f1)
 
-        return precision, recall
+        docs_r = [d for (d, s) in rank]
+        return precision, recall, f1,  docs_r
 
     def get_similarity(self, query_id ):
         """
