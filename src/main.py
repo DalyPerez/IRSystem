@@ -20,7 +20,7 @@ def select_neuralmodel(m, dataset):
     if m == 2:
         return load_model("./models/cisi_50_10_15.h5")
     if m == 3:
-        return load_model("./models/mp.03-0.83-0.43.h5")
+        return load_model("./models/mp.h5")
     
 def select_dataset(n):
     if n == 1:
