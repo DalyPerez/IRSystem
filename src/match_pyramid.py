@@ -31,10 +31,10 @@ class MatchPyramidModel:
 
         pool1_flat=Flatten()(z)
         pool1_flat_drop=Dropout(rate=0.5)(pool1_flat)
-        mlp1=Dense(32)(pool1_flat_drop)
-        mlp1 = Activation('relu')(mlp1)
-        mlp1 = Dropout(rate=0.5)(mlp1)
-        out=Dense(2, activation='softmax')(mlp1)
+        # mlp1=Dense(32)(pool1_flat_drop)
+        # mlp1 = Activation('relu')(mlp1)
+        # mlp1 = Dropout(rate=0.5)(mlp1)
+        out=Dense(2, activation='softmax')(pool1_flat_drop)
             
         self.model = Model(inputs=[query, doc], outputs=out)
 
@@ -100,12 +100,12 @@ if __name__ == "__main__":
     doc_len = 200
     emb_dim = 50
 
-    docs_dict, pdocs = read_all('../dataset/jsons/CRAN.ALL.json')
-    queries_dict, pqueries = read_qry('../dataset/jsons/CRAN.QRY.json')
-    relevances = read_rel('../dataset/jsons/CRAN.REL.json', len(pqueries))
+    docs_dict, pdocs = read_all('../dataset/jsons/CISI.ALL.json')
+    queries_dict, pqueries = read_qry('../dataset/jsons/CISI.QRY.json')
+    relevances = read_rel('../dataset/jsons/CISI.REL.json', len(pqueries))
 
     true, false, relpairs = conforms_pairs(relevances, len(docs_dict))
-    print(len(true), len(false), len(relpairs))
+    # print(len(true), len(false), len(relpairs))
     
     r.shuffle(false)
 
@@ -113,10 +113,8 @@ if __name__ == "__main__":
     false = false[:m]
     relpairs = true + false
     r.shuffle(relpairs)
-
-    print( len(true), len(false), len(relpairs))
     
-    fd = open('./word2vect/cran50.bin')
+    fd = open('./word2vect/cisi50.bin')
     w2v_dict = js.load(fd)
 
     X_query, X_doc, Y, XV_query, XV_doc, YV = data2train_mp(docs_dict, queries_dict, relpairs, w2v_dict, query_len, doc_len, emb_dim)
@@ -125,7 +123,7 @@ if __name__ == "__main__":
     model = MatchPyramidModel(query_len, doc_len, emb_dim)
     print("ready to train")
     start = time.time()
-    model.train(X_query, X_doc, Y, XV_query, XV_doc, YV, 50)
+    model.train(X_query, X_doc, Y, XV_query, XV_doc, YV, 20)
     end = time.time()
     print(end - start)
 
