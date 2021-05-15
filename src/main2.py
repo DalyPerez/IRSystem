@@ -21,9 +21,11 @@ def select_neuralmodel(m, dataset):
         if dataset == 1:
             return load_model("./models/lstmmodel_med10-15.h5")
         elif dataset == 2:
+            # return load_model("./models/lstmmodel_med10-15.h5")
             return load_model("./models/cisi_50_10_15.h5")
         else:
-            return load_model("./models/cran_50_10_5.h5")
+            return load_model("./models/lstmmodel_med10-15.h5")
+            # return load_model("./models/cran_50_10_5.h5")
     if m == 3:
         if dataset == 1:
             return load_model("./models/lstmmodel_med10-15.h5")
@@ -140,6 +142,15 @@ def main():
             rs = sum(rec)
             print("\n ---------> Precisión final: ", float(ps)/len(queries_dict) )
             print("\n ---------> Recall final: ", float(rs)/len(queries_dict) )
+
+            print("Search for result in LSTM Model...\n\n") #for a simple query
+            model = select_neuralmodel(model, dataset)
+            vquery = doc2vector(pquery, w2v_dict)
+                
+            rank = execute_query(q_id, vquery, docs_dict, relevances, w2v_dict, model)
+            evaluator = IREvaluator(relevances, rank)
+            p, r = evaluator.evaluate_query(q_id)
+           
 
         elif  model == 3:
             print("Search for result in Matching Pyramid Model...")
